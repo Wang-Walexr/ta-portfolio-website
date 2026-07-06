@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adewale Abdulkabir - Technical Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--surface:#f6f7f8;--surface2:#eef0f2;--border:#e2e5e9;
+  --text:#1a1d21;--text-secondary:#5b6470;--accent:#2f6feb;--accent-soft:#eaf1fd;
+  --font-body:'Roboto',sans-serif;--font-mono:'Roboto Mono',monospace;
+}
+[data-theme="dark"]{
+  --bg:#14161a;--surface:#1b1e23;--surface2:#22262c;--border:#2c3038;
+  --text:#eceef0;--text-secondary:#939ba5;--accent:#5b9bff;--accent-soft:#1c2c47;
+}
+html{scroll-behavior:smooth;height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;transition:background .25s,color .25s;
+  min-height:100vh;display:flex;flex-direction:column}
+#content-wrapper{flex:1 0 auto}
+footer{flex-shrink:0}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2rem;background:var(--bg);border-bottom:1px solid var(--border)}
+.nav-logo{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;cursor:pointer;background:none;border:none;font-family:inherit}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links button.navlink{font-size:.9rem;color:var(--text-secondary);background:none;border:none;cursor:pointer;font-family:inherit;transition:color .15s}
+.nav-links button.navlink:hover{color:var(--text)}
+.nav-links button.navlink.active{color:var(--text);font-weight:500}
+.theme-toggle{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background .15s}
+.theme-toggle:hover{background:var(--surface2)}
+
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+.container-medium{max-width:1100px;margin:0 auto;padding:0 2rem}
+.container-wide{max-width:1280px;margin:0 auto;padding:0 2rem}
+.section{padding:4rem 0}
+.section-title{font-size:1.9rem;font-weight:700;margin-bottom:2rem}
+
+#hero{position:relative;min-height:70vh;display:flex;align-items:flex-end;overflow:hidden;width:100%}
+.hero-video-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,#1b2436,#0f1115)}
+.hero-video-bg video{width:100%;height:100%;object-fit:cover;opacity:.55}
+.hero-video-bg iframe{width:100%;height:100%;object-fit:cover;opacity:.55;pointer-events:none;border:0}
+.hero-video-bg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to top, var(--bg) 0%, rgba(20,22,26,0.55) 55%, rgba(20,22,26,0.15) 100%)}
+[data-theme="light"] .hero-video-bg::after{
+  background:linear-gradient(to top, var(--bg) 0%, rgba(255,255,255,0.6) 55%, rgba(255,255,255,0.2) 100%)}
+.hero-inner{position:relative;z-index:2;padding:4rem 2rem 3rem;max-width:1280px;margin:0 auto;width:100%}
+.hero-eyebrow{font-family:var(--font-mono);font-size:.9rem;color:var(--accent);margin-bottom:1rem;
+  text-transform:uppercase;letter-spacing:.05em}
+.hero-name{font-size:clamp(2.4rem,5.5vw,3.6rem);font-weight:700;margin-bottom:1rem;line-height:1.1;color:#fff}
+[data-theme="light"] .hero-name{color:var(--text)}
+.hero-tagline{font-size:1.05rem;color:#d7dce3;max-width:600px;margin-bottom:2rem}
+[data-theme="light"] .hero-tagline{color:var(--text-secondary)}
+.hero-tagline strong{color:#fff;font-weight:500}
+[data-theme="light"] .hero-tagline strong{color:var(--text)}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{font-size:.9rem;padding:.65rem 1.4rem;border-radius:6px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.4rem;transition:all .15s;font-weight:500;cursor:pointer;border:none;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.25)!important;backdrop-filter:blur(6px)}
+[data-theme="light"] .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)!important}
+.btn-secondary:hover{background:rgba(255,255,255,.15)}
+[data-theme="light"] .btn-secondary:hover{background:var(--surface2)}
+
+.filter-row{display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap}
+.filter-btn{font-size:1rem;padding:.4rem .9rem;border-radius:20px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.filter-btn:hover{color:var(--text)}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.row-limited{overflow-y:auto;padding-right:.6rem}
+.row-limited::-webkit-scrollbar{width:6px}
+.row-limited::-webkit-scrollbar-track{background:transparent}
+.row-limited::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.expand-toggle{display:none;margin:1.75rem auto 0;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border);background:var(--surface);align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-secondary);font-size:1rem;transition:background .15s,color .15s,transform .15s}
+.expand-toggle:hover{background:var(--surface2);color:var(--text);transform:translateY(2px)}
+
+.lightbox-trigger{cursor:zoom-in}
+.lightbox{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.9);display:flex;
+  align-items:center;justify-content:center;padding:3rem;cursor:zoom-out}
+.lightbox.hidden{display:none}
+.lightbox img{max-width:100%;max-height:100%;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.lightbox-close{position:absolute;top:1.5rem;right:1.5rem;width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:1.2rem;
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.lightbox-close:hover{background:rgba(255,255,255,.2)}
+.work-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  text-decoration:none;color:inherit;transition:border-color .15s,transform .15s;display:block;cursor:pointer}
+.work-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.work-thumb{aspect-ratio:16/9;background:var(--surface2);display:flex;align-items:center;justify-content:center;
+  color:var(--text-secondary);font-size:.78rem;font-family:var(--font-mono);text-align:center;padding:0 1rem}
+.work-body{padding:1.1rem 1.25rem}
+.work-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem}
+.tag{font-size:.9rem;font-family:var(--font-mono);padding:.15rem .5rem;background:var(--surface2);
+  border-radius:4px;color:var(--text-secondary)}
+.work-title{font-size:1.2rem;font-weight:700;margin-bottom:.35rem}
+.work-desc{font-size:.9rem;color:var(--text-secondary);line-height:1.5}
+
+/* Dev Log cards - 2 per row rectangular */
+.note-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+.note-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;
+  text-decoration:none;color:inherit;cursor:pointer;transition:border-color .15s,transform .15s;display:block}
+.note-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.note-card:hover .note-title{color:var(--accent)}
+.note-image{width:100%;aspect-ratio:16/9;border-radius:6px;object-fit:cover;margin-bottom:1rem;display:block}
+.note-image-ph{width:100%;aspect-ratio:16/9;border-radius:6px;border:1px dashed var(--border);
+  background:var(--surface2);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;
+  color:var(--text-secondary);font-size:.72rem;font-family:var(--font-mono)}
+.note-meta{display:flex;gap:.75rem;align-items:center;margin-bottom:.6rem}
+.note-date{font-size:.78rem;color:var(--text-secondary);font-family:var(--font-mono)}
+.note-title{font-size:1.1rem;font-weight:700;margin-bottom:.5rem;line-height:1.35}
+.note-summary{font-size:.95rem;color:var(--text-secondary)}
+
+.about-grid{display:grid;grid-template-columns:200px 1fr;gap:2.5rem;align-items:start}
+.about-photo{width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--surface);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  color:var(--text-secondary);font-size:.75rem;font-family:var(--font-mono);text-align:center}
+.about-photo img{width:100%;height:100%;object-fit:cover}
+.about-text p{color:var(--text-secondary);margin-bottom:1rem;font-size:1.1rem}
+.about-text p strong{color:var(--text);font-weight:500}
+.philosophy{font-size:1.1rem;margin-top:1.25rem;padding:1rem 1.25rem;background:var(--surface);border-left:3px solid var(--accent);border-radius:4px}
+.philosophy p{font-size:.9rem;font-style:italic;margin:0!important;color:var(--text-secondary)}
+.stack-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem;margin-bottom:2rem}
+.stack-chip{font-size:.9rem;font-family:var(--font-mono);padding:.3rem .75rem;background:var(--surface);
+  border:1px solid var(--border);border-radius:16px;color:var(--text-secondary)}
+
+.exp-item{display:grid;grid-template-columns:160px 1fr;gap:1.5rem;padding:1.5rem 0;border-top:1px solid var(--border)}
+.exp-item:first-child{border-top:none}
+.exp-company{font-weight:700;font-size:1.2rem}
+.exp-period{font-size:1rem;color:var(--text-secondary);font-family:var(--font-mono)}
+.exp-role{font-weight:500;font-size:1.2rem;color:var(--accent);margin-bottom:.5rem}
+.exp-desc{font-size:1.1rem;color:var(--text-secondary);margin-bottom:.75rem}
+.trailer-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.9rem;color:var(--accent);
+  text-decoration:none;margin-bottom:.85rem;font-weight:500}
+.trailer-link:hover{text-decoration:underline}
+
+.edu-item{display:grid;grid-template-columns:160px 1fr;gap:1.5rem;padding:1.25rem 0;border-top:1px solid var(--border)}
+.edu-item:first-child{border-top:none}
+.edu-school{font-weight:700;font-size:1.2rem}
+.edu-year{font-size:1rem;color:var(--text-secondary);font-family:var(--font-mono)}
+.edu-degree{font-weight:500;font-size:1.2rem;color:var(--accent);margin-bottom:.35rem}
+.edu-note{font-size:1.1rem;color:var(--text-secondary);margin-bottom:.75rem}
+
+.detail-header{padding:3rem 0 2rem;border-bottom:1px solid var(--border)}
+.back-link{font-size:.9rem;color:var(--text-secondary);text-decoration:none;display:inline-flex;
+  align-items:center;gap:.4rem;margin-bottom:1.5rem;background:none;border:none;cursor:pointer;font-family:inherit}
+.back-link:hover{color:var(--accent)}
+.detail-title{font-size:2rem;font-weight:700;margin-bottom:.75rem;line-height:1.25}
+.note-detail-body{padding:2.5rem 0;font-size:1.2rem}
+.note-detail-body p{margin-bottom:1.25rem;color:var(--text-secondary)}
+.note-detail-body h3{font-size:1.3rem;font-weight:700;margin:2rem 0 .75rem;color:var(--text)}
+.note-detail-body code{font-family:var(--font-mono);background:var(--surface);padding:.15rem .4rem;
+  border-radius:4px;font-size:.85em;color:var(--accent)}
+.note-detail-body pre{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1rem 1.25rem;overflow-x:auto;margin-bottom:1.25rem}
+.note-detail-body pre code{background:none;padding:0;color:var(--text)}
+.note-detail-body ul{margin:0 0 1.25rem 1.25rem;color:var(--text-secondary)}
+.note-detail-body li{margin-bottom:.4rem}
+.note-body-img{width:40%;border-radius:8px;margin:1.5rem 0;display:inline;border:1px solid var(--border)}
+.note-body-img-ph{width:100%;aspect-ratio:16/9;border-radius:8px;border:1px dashed var(--border);
+  background:var(--surface2);margin:1.5rem 0;display:flex;align-items:center;justify-content:center;
+  color:var(--text-secondary);font-size:.85rem;font-family:var(--font-mono);text-align:center;padding:0 1rem}
+.note-meta .work-tags{margin-bottom:0}
+
+.proj-detail-sub{color:var(--text-secondary);font-size:1.1rem;max-width:640px}
+.proj-body-grid{display:grid;grid-template-columns:1fr 260px;gap:3rem;padding:2.5rem 0;align-items:start}
+.video-box{aspect-ratio:16/9;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);
+  font-size:.85rem;font-family:var(--font-mono);flex-direction:column;gap:.75rem;overflow:hidden}
+.video-box video{width:100%;height:100%;object-fit:cover}
+.video-box iframe{width:100%;height:100%;border:0}
+.proj-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:2rem}
+.proj-gallery-item{aspect-ratio:16/9;background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:.72rem;
+  font-family:var(--font-mono);overflow:hidden;text-align:center;padding:0 .5rem}
+.proj-gallery-item img{width:100%;height:100%;object-fit:cover}
+.bd-block{padding:1.25rem 0;border-top:1px solid var(--border)}
+.bd-block:first-child{border-top:none}
+.bd-label{font-size:1.2rem;font-family:var(--font-mono);color:var(--accent);text-transform:uppercase;margin-bottom:.4rem}
+.bd-text{font-size:1.1rem;color:var(--text-secondary);line-height:1.7}
+.disclaimer-box{border-top:none;background:var(--surface);border-radius:8px;padding:1.1rem 1.25rem;
+  border-left:3px solid var(--accent)}
+.disclaimer-box .bd-label{color:var(--text-secondary);text-transform:uppercase}
+.side-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;margin-bottom:1rem}
+.side-card h4{font-size:.75rem;font-family:var(--font-mono);color:var(--accent);text-transform:uppercase;margin-bottom:.75rem}
+.side-link{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--accent);text-decoration:none;padding:.5rem 0}
+
+.more-projects{padding:3rem 0;border-top:1px solid var(--border)}
+.more-projects h3{font-size:1.15rem;font-weight:700;margin-bottom:1.25rem}
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+
+#contact{text-align:center;padding:4rem 0;border-top:1px solid var(--border)}
+.contact-title{font-size:2.2rem;font-weight:700;margin-bottom:.75rem}
+.contact-sub{font-size:1.1rem;color:var(--text-secondary);margin-bottom:1.75rem;max-width:480px;margin-left:auto;margin-right:auto}
+footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center}
+footer p{font-size:.8rem;color:var(--text-secondary)}
+.hidden{display:none!important}
+
+@media(max-width:900px){
+  .work-grid,.more-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .nav-links{gap:1rem}
+  .work-grid,.more-grid,.note-grid{grid-template-columns:1fr}
+  .about-grid,.exp-item,.edu-item,.proj-body-grid{grid-template-columns:1fr}
+  .about-photo{width:120px}
+  .proj-gallery{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<nav>
+  <button class="nav-logo" onclick="goHomeAndScroll('top')">Adewale Abdulkabir</button>
+  <ul class="nav-links">
+    <li><button class="navlink" onclick="goHomeAndScroll('work')">Work</button></li>
+    <li><button class="navlink" onclick="navigate('/notes')" id="navNotes">Dev Log</button></li>
+    <li><button class="navlink" onclick="goHomeAndScroll('about')">About</button></li>
+    <li><button class="navlink" onclick="goHomeAndScroll('contact')">Contact</button></li>
+    <li><button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button></li>
+  </ul>
+</nav>
+
+<div id="content-wrapper">
+<!-- ============ HOME (Hero + Work + About + Contact all live here) ============ -->
+<div id="page-home">
+  <section id="hero">
+    <!-- Hero background uses a local video file, not YouTube — this gives
+         full-bleed cover cropping with no branding or replay overlays.
+         Place your reel file (e.g. reel.mp4) in the same folder as this
+         HTML file, or update the src path below to wherever you host it. -->
+    <div class="hero-video-bg">
+      <video autoplay muted loop playsinline>
+        <source src="assets/reel.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Technical Artist - Tools &amp; Pipeline | Shaders </div>
+      <h1 class="hero-name">Hi, I'm Adewale.</h1>
+      <p class="hero-tagline">I enjoy building tools and systems that improve productivity
+        (editor utilities, optimization pipelines, python and shaders) majorly in Unreal Engine 5.
+        <strong>Currently focused on games and archviz production pipelines.</strong></p>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/adewaleabdulkabir/" target="_blank" class="btn btn-secondary">LinkedIn</a>
+        <a href="https://github.com/Wang-Walexr" target="_blank" class="btn btn-secondary">GitHub</a>
+        <a href="assets/Adewale_CV.pdf" download="Adewale_CV" target="_blank" class="btn btn-primary">Download CV</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-medium">
+    <section class="section" id="work">
+      <h2 class="section-title">Work</h2>
+      <div class="filter-row" id="workFilters"></div>
+      <div class="work-grid" id="workGrid"></div>
+      <button class="expand-toggle" id="workExpandBtn" onclick="toggleWorkExpand()" aria-label="Show more work">▾</button>
+    </section>
+  </div>
+
+  <div class="container-medium">
+    <section class="section" id="about">
+      <h2 class="section-title">About</h2>
+      <div class="about-grid">
+        <div class="about-photo"><img src="assets/About_me.jpg" alt="Adewale Abdulkabir"></div>
+        <div class="about-text">
+          <p>I'm <strong>Hafeez Adewale Abdulkabir</strong>, a Technical Artist
+          specialising in tools &amp; pipeline and shaders for games and film/archviz
+          production.My background is in game development, 3d modelling (props and environment) 
+          character rigging, which gives me a great asset;
+          <strong>direct empathy for the artist on the other end of the tool.</strong></p>
+          <p>At <strong>Quiva Games</strong>, I shipped <em>Edge of Infinity</em>,
+          contributing to character pipelines, Houdini-based procedural 
+          tooling, Python automation, and asset optimisation workflows.</p>
+          <p>I'm currently building a focused UE5 tools & pipeline and shaders specialisation 
+            (editor tooling, optimization systems, and material pipelines) for real-time productions.</p>
+          <div class="philosophy">"The best pipeline tool is the one artists
+          forget exists, because it never breaks, never gets in the way,
+          and just makes everything faster."</div>
+          <div class="stack-row" id="stackRow"></div>
+          <a href="assets/Adewale_CV.pdf" download="Adewale_CV" target="_blank" class="btn btn-primary">Download CV</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience" style="padding-top:0">
+      <h2 class="section-title">Professional Experience</h2>
+      <div id="expList"></div>
+    </section>
+
+    <section class="section" id="education" style="padding-top:0">
+      <h2 class="section-title">Education</h2>
+      <div id="eduList"></div>
+    </section>
+  </div>
+
+  <section id="contact">
+    <div class="container">
+      <h2 class="contact-title">Looking for a Technical Artist?</h2>
+      <p class="contact-sub">Open to full-time, contract, and remote
+      opportunities in games and archviz. Reach out any time.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a href="mailto:ade.waleigh@gmail.com" class="btn btn-primary">Send an email</a>
+        <a href="https://github.com/Wang-Walexr" target="_blank" class="btn btn-secondary">GitHub</a>
+        <a href="https://www.linkedin.com/in/adewaleabdulkabir/" target="_blank" class="btn btn-secondary">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECT DETAIL ============ -->
+<div id="page-project" class="hidden">
+  <div class="container">
+    <div class="detail-header">
+      <button class="back-link" onclick="goHomeAndScroll('work')">← Back to work</button>
+      <div class="work-tags" id="projTags"></div>
+      <h1 class="detail-title" id="projTitle"></h1>
+      <p class="proj-detail-sub" id="projSub"></p>
+    </div>
+    <div class="proj-body-grid">
+      <div>
+        <div class="video-box" id="projVideo"></div>
+        <div class="proj-gallery" id="projGallery"></div>
+        <div id="projBreakdown"></div>
+      </div>
+      <div id="projSidebar"></div>
+    </div>
+    <div class="more-projects">
+      <h3>More Work</h3>
+      <div class="more-grid" id="moreProjects"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NOTES LIST ============ -->
+<div id="page-notes" class="hidden">
+  <div class="container-wide">
+    <section class="section">
+      <h2 class="section-title">Dev Log</h2>
+      <div class="filter-row" id="noteFilters"></div>
+      <div class="note-grid" id="notesList"></div>
+      <button class="expand-toggle" id="notesExpandBtn" onclick="toggleNotesExpand()" aria-label="Show more posts">▾</button>
+    </section>
+  </div>
+</div>
+
+<!-- ============ NOTE DETAIL ============ -->
+<div id="page-note-detail" class="hidden">
+  <div class="container">
+    <div class="detail-header">
+      <button class="back-link" onclick="navigate('/notes')">← Back to Dev Log</button>
+      <div class="note-meta">
+        <span class="note-date" id="noteDate"></span>
+        <div class="work-tags" id="noteTags"></div>
+      </div>
+      <h1 class="detail-title" id="noteTitle"></h1>
+    </div>
+    <div class="note-detail-body" id="noteBody"></div>
+  </div>
+</div>
+
+</div><!-- closes content-wrapper -->
+
+<!-- ============ LIGHTBOX (shared, used by project gallery + dev log images) ============ -->
+<div id="lightbox" class="lightbox hidden" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox(event)" aria-label="Close">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+<footer><p>© 2026 Hafeez Adewale Abdulkabir</p></footer>
+
+<script>
+/* ============================================================
+   HOW TO ADD NEW CONTENT — READ THIS FIRST
+   ============================================================
+   Everything on this site is driven by two arrays below:
+   PROJECTS (the Work section) and NOTES (the Dev Log section).
+
+   TO ADD A NEW PROJECT:
+   Copy any existing object inside the PROJECTS array, paste it
+   as a new entry, and change every field. "id" must be unique
+   and URL-safe (lowercase, hyphens, no spaces) — it becomes
+   the shareable link: yoursite.com/#/project/your-id-here
+
+   THE VIDEO ON A PROJECT PAGE:
+   Controlled by the "videoId" field on that project's object —
+   this is the YouTube video ID only (the part after watch?v= or
+   after youtu.be/), not the full URL. Leave "videoId" out entirely
+   and the page falls back to PLACEHOLDER_VIDEO_ID (defined near
+   the top of this script) automatically. To give a project its
+   own real video, just add e.g. videoId:"AbCdEfGhIjK" to that
+   project's object.
+
+   THE GALLERY ON A PROJECT PAGE:
+   "gallery" is an array of {caption, image} objects, e.g.
+     gallery:[
+       {caption:"Results panel showing PASS/FAIL", image:"screenshot1.jpg"},
+       {caption:"Post-fix results, all clean", image:""}
+     ]
+   If "image" is left as "" the gallery slot shows the caption as
+   plain text instead — so you can write captions first and drop
+   in real screenshots later without anything breaking.
+
+   "thumbnail" is optional — a filename or URL for the image shown
+   on the Work card and in "More Work" lists. Leave it out (or
+   leave it as "") and the card shows the project title as text
+   instead, so nothing breaks if you haven't got an image yet.
+
+   SHOWCASE PROJECTS WITH NO PROBLEM/SOLUTION/RESULT:
+   For work you can't write a full breakdown for (e.g. professional
+   work covered by an employer's IP), add a "disclaimer" field
+   instead of "problem"/"solution"/"result". If "disclaimer" is
+   present, the project page shows video + gallery + that
+   disclaimer text only, skipping the Problem/Solution/Result
+   layout entirely. Just copy one of the existing disclaimer-based
+   entries (e.g. "character-rigging") as a template.
+
+   TO ADD A NEW DEV LOG NOTE:
+   Same idea — copy an object in the NOTES array, change the
+   fields. "category" is now an ARRAY, same as PROJECTS — a note
+   can belong to more than one filter tab, e.g. category:["Python","Tool Design"].
+   Using a new category name automatically creates a new filter
+   tab — no other changes needed.
+   "image" is optional — a banner image shown at the top of the
+   post. Leave it as an empty string "" to show nothing, or paste
+   a filename/URL to show it.
+
+   ADDING IMAGES INSIDE A DEV LOG POST BODY:
+   The "body" field is raw HTML text, so you can drop an image
+   anywhere inside it:
+     Real image:        <img class="note-body-img lightbox-trigger" src="your-image.jpg" alt="Description">
+     Placeholder image:  <div class="note-body-img-ph">Caption here</div>
+   Paste either directly between paragraphs inside "body", and
+   delete the line when you don't need an image at that point.
+
+   ROW-LIMITED DISPLAY (Work and Dev Log grids):
+   Both grids start collapsed — Work shows 2 rows, Dev Log shows 4 —
+   with a small down-arrow button beneath the section if there's more
+   content than that. Clicking the arrow reveals everything; if the
+   full list is still taller than 3 rows (Work) or 5 rows (Dev Log)
+   at that point, it becomes a scrollable panel instead of growing
+   the whole page. All of this is calculated automatically from
+   however many cards exist — no manual configuration needed, and
+   switching filter tabs resets back to the collapsed view.
+
+   CLICK-TO-ENLARGE IMAGES:
+   Any project gallery image or Dev Log image (banner or body) opens
+   in a full-screen lightbox when clicked, closing on click-away,
+   the ✕ button, or Escape. This works automatically for gallery
+   images and note banner images. For an image you hand-write inside
+   a Dev Log post body, just add the class "lightbox-trigger" to the
+   <img> tag (see the body image instructions below) and it becomes
+   clickable automatically — no extra setup needed.
+
+   No HTML or CSS editing needed for new content. Just edit
+   the two arrays below, save the file, done.
+   ============================================================ */
+
+// ============ VIDEO EMBED HELPER ============
+const PLACEHOLDER_VIDEO_ID = "Ec0VDSN0hCs"; // shared placeholder until a real demo is recorded per project
+
+function videoEmbed(videoId, opts = {}){
+  const { autoplay = false, mute = false, loop = false } = opts;
+  let params = "rel=0&modestbranding=1&playsinline=1";
+  if(autoplay) params += "&autoplay=1";
+  if(mute) params += "&mute=1";
+  if(loop) params += `&loop=1&playlist=${videoId}`;
+  return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?${params}"
+    title="Project video" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen></iframe>`;
+}
+
+// ============ ROW CAP HELPER (shared by collapse and scroll modes) ============
+// mode 'collapse' → hard cutoff, no scrollbar, used for the default collapsed view
+// mode 'scroll'   → cutoff with a scrollbar, used after the expand arrow is clicked
+// Returns true if capping was actually needed (i.e. there's more content than `rows` allows)
+function applyRowCap(gridEl, rows, mode){
+  if(!gridEl) return false;
+  gridEl.style.maxHeight = '';
+  gridEl.style.overflowY = '';
+  gridEl.classList.remove('row-limited');
+
+  const items = Array.from(gridEl.children);
+  if(items.length === 0) return false;
+
+  const rowMap = new Map();
+  items.forEach(it=>{
+    const top = it.offsetTop;
+    if(!rowMap.has(top)) rowMap.set(top, []);
+    rowMap.get(top).push(it);
+  });
+  const rowTops = [...rowMap.keys()].sort((a,b)=>a-b);
+  if(rowTops.length <= rows) return false;
+
+  let heightSum = 0;
+  for(let i=0;i<rows;i++){
+    const rowItems = rowMap.get(rowTops[i]);
+    heightSum += Math.max(...rowItems.map(it=>it.offsetHeight));
+  }
+  let gap = 0;
+  if(rowTops.length > 1){
+    const firstRowHeight = Math.max(...rowMap.get(rowTops[0]).map(it=>it.offsetHeight));
+    gap = rowTops[1] - rowTops[0] - firstRowHeight;
+  }
+  heightSum += gap * (rows - 1);
+
+  gridEl.style.maxHeight = heightSum + 'px';
+  if(mode === 'scroll'){
+    gridEl.style.overflowY = 'auto';
+    gridEl.classList.add('row-limited');
+  } else {
+    gridEl.style.overflowY = 'hidden';
+  }
+  return true;
+}
+
+// Row thresholds — collapsed view shown by default, scroll view shown after expanding
+const WORK_COLLAPSE_ROWS = 2;
+const WORK_SCROLL_ROWS = 3;
+const NOTES_COLLAPSE_ROWS = 4;
+const NOTES_SCROLL_ROWS = 5;
+
+let workExpanded = false;
+let notesExpanded = false;
+
+function collapseGrid(gridEl, collapseRows, arrowId){
+  const needsToggle = applyRowCap(gridEl, collapseRows, 'collapse');
+  const arrow = document.getElementById(arrowId);
+  if(arrow) arrow.style.display = needsToggle ? 'flex' : 'none';
+}
+function expandGrid(gridEl, scrollRows, arrowId){
+  applyRowCap(gridEl, scrollRows, 'scroll');
+  const arrow = document.getElementById(arrowId);
+  if(arrow) arrow.style.display = 'none';
+}
+function toggleWorkExpand(){
+  workExpanded = true;
+  expandGrid(document.getElementById('workGrid'), WORK_SCROLL_ROWS, 'workExpandBtn');
+}
+function toggleNotesExpand(){
+  notesExpanded = true;
+  expandGrid(document.getElementById('notesList'), NOTES_SCROLL_ROWS, 'notesExpandBtn');
+}
+
+window.addEventListener('resize', () => {
+  const wg = document.getElementById('workGrid');
+  const nl = document.getElementById('notesList');
+  if(workExpanded) applyRowCap(wg, WORK_SCROLL_ROWS, 'scroll');
+  else collapseGrid(wg, WORK_COLLAPSE_ROWS, 'workExpandBtn');
+  if(notesExpanded) applyRowCap(nl, NOTES_SCROLL_ROWS, 'scroll');
+  else collapseGrid(nl, NOTES_COLLAPSE_ROWS, 'notesExpandBtn');
+});
+
+// ============ LIGHTBOX (click any project gallery or dev log image to enlarge) ============
+// Any element with class "lightbox-trigger" opens the lightbox on click.
+// If the element itself is an <img>, its own src/alt are used automatically.
+// If it's a wrapper div around an image, set data-image and data-alt on it instead.
+function openLightbox(src, alt){
+  if(!src) return;
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  img.src = src;
+  img.alt = alt || '';
+  lb.classList.remove('hidden');
+}
+function closeLightbox(e){
+  if(e) e.stopPropagation();
+  document.getElementById('lightbox').classList.add('hidden');
+  document.getElementById('lightboxImg').src = '';
+}
+document.addEventListener('click', (e)=>{
+  const trigger = e.target.closest('.lightbox-trigger');
+  if(!trigger) return;
+  const src = trigger.dataset.image || trigger.src || '';
+  const alt = trigger.dataset.alt || trigger.alt || '';
+  openLightbox(src, alt);
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape') closeLightbox();
+});
+
+// ============ THEME ============
+function toggleTheme(){
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+(function(){
+  const saved = localStorage.getItem('theme');
+  if(saved === 'light'){
+    document.body.setAttribute('data-theme','light');
+    document.getElementById('themeBtn').textContent = '🌙';
+  }
+})();
+
+// ============ ROUTING ============
+function navigate(path){ window.location.hash = '#' + path; }
+
+function goHomeAndScroll(sectionId){
+  const onHome = !document.getElementById('page-home').classList.contains('hidden');
+  if(!onHome){
+    window.location.hash = '#/';
+    setTimeout(()=>scrollToId(sectionId), 60);
+  } else {
+    scrollToId(sectionId);
+  }
+}
+function scrollToId(id){
+  if(id === 'top'){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+
+function router(){
+  const hash = window.location.hash.replace(/^#/, '') || '/';
+  const parts = hash.split('/').filter(Boolean);
+
+  document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.navlink').forEach(a=>a.classList.remove('active'));
+
+  if(parts.length === 0){
+    document.getElementById('page-home').classList.remove('hidden');
+  } else if(parts[0] === 'notes' && parts.length === 1){
+    document.getElementById('page-notes').classList.remove('hidden');
+    document.getElementById('navNotes').classList.add('active');
+    const nl = document.getElementById('notesList');
+    if(notesExpanded) applyRowCap(nl, NOTES_SCROLL_ROWS, 'scroll');
+    else collapseGrid(nl, NOTES_COLLAPSE_ROWS, 'notesExpandBtn');
+  } else if(parts[0] === 'notes' && parts[1]){
+    showNote(parts[1]);
+    document.getElementById('navNotes').classList.add('active');
+  } else if(parts[0] === 'project' && parts[1]){
+    showProject(parts[1]);
+  } else {
+    document.getElementById('page-home').classList.remove('hidden');
+  }
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', router);
+
+// ============ PROJECT DATA ============
+const PROJECTS = [
+  {
+    id:"optimization-auditor",
+    title:"Optimization Auditor",
+    shortDesc:"Platform-aware scene and asset performance audit tool with automated fixes",
+    category:["tools"],
+    tags:["UE5","Python","Blueprint"],
+    videoId:"jmYudNmXkxI",
+    thumbnail:"assets/optimization-auditor-thumb.png",
+    problem:"Performance issues in Unreal Engine 5 projects are usually caught too late, after a milestone delivery rather than at the moment an asset enters the project. Manually reviewing every mesh for missing LODs, checking every texture's compression settings, and estimating draw call cost from scene composition is slow, inconsistent, and easy to skip under deadline pressure.",
+    solution:"An Editor Utility Widget built in UE5.7 with two audit modes. Asset Audit scans the Content Browser and applies a single unified decision tree per mesh. A mesh either qualifies for Nanite or falls back to a generated LOD chain, never both, since Nanite replaces LODs entirely once enabled. It also checks texture size, sRGB correctness, and mipmap presence. Scene Audit scans the live level for instancing opportunities, material-slot draw call cost, and dynamic light count. Every threshold is platform-aware (PC / Console / Mobile presets, fully editable) and frame-target-aware. The same mesh can pass at 30fps and fail at 120fps, because the available frame budget genuinely changes what counts as a problem. Fixes are split deliberately: LOD generation, Nanite enabling, sRGB correction, and mipmap fixes are automated because they're reversible and purely technical. Material slot reduction, instancing conversion, and lighting mobility changes are flagged with clear recommendations only, because they involve artistic or gameplay judgment the tool has no business making unsupervised.",
+    result:"A single tool that catches optimization problems at the source, explains exactly why each one was flagged with the real numbers involved, and safely fixes what's safe to fix, while explicitly refusing to touch what requires a human decision. Re-running the audit after a fix confirms the issue is actually resolved, not just reported as successful.",
+    tools:["Unreal Engine 5.7","Python","Blueprint","Editor Utility Widget"],
+    github:"https://github.com/Wang-Walexr/ue5-optimization-auditor",
+    gallery:[
+      {caption:"Asset Audit results: flagged issues with reasoning", image:"assets/optimization-auditor-test1.png"},
+      {caption:"Scene Audit: instancing and draw call cost", image:"assets/optimization-auditor-test2.png"}
+    ]
+  },
+  {
+    id:"naming-checker",
+    title:"Naming Convention Tool",
+    shortDesc:"UE5 editor tool with persistent, editable naming conventions and auto-fix",
+    category:["tools"],
+    tags:["UE5","Blueprint","Python"],
+    videoId:"8dDa3FCXo6w",
+    thumbnail:"assets/naming_checker-thumb.png",
+    problem:"Artists name assets inconsistently; missing prefixes, wrong conventions, typos. Catching these late causes broken references and wasted pipeline time. A studio's naming conventions also vary from project to project, so a tool that hardcodes one fixed convention isn't reusable across teams.",
+    solution:"An Editor Utility Widget built in UE5.7 with Blueprint and Python. Scans any Content Browser folder, checks assets against a configurable convention map, shows colour-coded PASS/FAIL results, and auto-renames failing assets in one click. Version 2 adds a dropdown of common UE5 asset types that auto-suggests a sensible default prefix, full add/update/remove editing of rules directly from the UI, and automatic persistence to a local JSON file, so a studio's conventions survive closing and reopening the editor with zero manual setup. Adding a rule for an asset type that already exists updates it in place rather than creating a conflicting duplicate.",
+    result:"A zero-dependency editor tool any artist can run and reconfigure without touching Blueprint. Conventions persist across sessions, ship with sensible defaults on first run, and stay safe from accidental duplicate rules.",
+    tools:["Unreal Engine 5.7","Blueprint","Python", "Editor Utility Widget"],
+    github:"https://github.com/Wang-Walexr/ue5_naming_convention_checker",
+    gallery:[
+      {caption:"Naming Checker UI", image:"assets/gallery-naming_checker.png"},
+      {caption:"Naming Checker Post-fix: all green", image:"assets/gallery-naming_checker2.png"}
+    ]
+  },
+
+  // {
+  //   id:"concrete-material",
+  //   title:"PBR Concrete Material System",
+  //   shortDesc:"Archviz master material with AO-driven dirt accumulation and wetness control",
+  //   category:["shaders"],
+  //   tags:["UE5","Materials","PBR"],
+  //   videoId:"AbCdEfGhIjK",
+  //   thumbnail:"assets/optimization-auditor-thumb.png",
+  //   problem:"Archviz materials need to respond to environmental wear without manual painting.",
+  //   solution:"A master material with dirt accumulation driven by the AO channel, plus a wetness parameter affecting roughness and colour. Correct under both Lumen and Path Tracing.",
+  //   result:"Three distinct surface states — clean, dirty, wet — from a single master material.",
+  //   tools:["Unreal Engine 5.7","Material Editor"],
+  //   github:"#",
+  //   gallery:[
+  //     {caption:"Clean / Dirty / Wet comparison render", image:""}
+  //   ]
+  // },
+
+  {
+    id:"procedural-cable",
+    title:"Procedural Cable Tool",
+    shortDesc:"Houdini HDA procedural tool for generating customizable, game-ready cables using spline-driven workflows.",
+    category:["tools","professional"],
+    tags:["Houdini","VEX","HDA", "Procedural"],
+    videoId:"aRCnfiybOTY",
+    thumbnail:"assets/proc-cable_thumb.png",
+    problem:"Creating cables manually is repetitive and difficult to iterate on, especially when adjusting shapes, thickness, or layout across multiple assets in a scene.",
+    solution:"A Houdini Digital Asset with tabbed parameters for cable, simulation, optimisation, and material. VEX-driven curve generation with procedural sag and bundling.",
+    result:"Spline-driven cable generation with procedural control over shape and curvature through it's UI parameter interface. Outputs a game ready mesh. Used in production on Edge of Infinity.",
+    tools:["Houdini","VEX"],
+    github:"https://github.com/Wang-Walexr/wire-cable-generator-hda",
+    gallery:[
+      {caption:"HDA parameter interface", image:"assets/gallery-hda-ui.png"},
+      {caption:"Cable output in scene", image:"assets/gallery-cable-output.png"}
+    ]
+  },
+
+  {
+    id:"uv-set-cleanup",
+    title:"UVSet Cleanup Tool",
+    shortDesc:"A PySide6 tool for Autodesk Maya that streamlines UV set management by automatically cleaning up unnecessary UV sets on selected meshes.",
+    category:["tools"],
+    tags:["Autodesk Maya","Python","PySide6"],
+    videoId:"L1zIi6c2HZg",
+    thumbnail:"assets/uv-set-thumb.png",
+    problem:"Managing multiple UV sets across assets in Maya is tedious and error-prone. Artists often leave behind unused UV sets, leading to messy scenes, export issues, and inconsistencies in game pipelines.",
+    solution:"A lightweight Python tool with a PySide6 interface that removes all non-primary UV sets from selected meshes in a single click, ensuring clean, consistent assets ready for downstream use.",
+    result:"A One-click removal of non-primary UV sets with simple and intuitive PySide6 UI. Works for batch processing for multiple selected meshes and reduces manual cleanup time ",
+    tools:["Autodesk Maya","Python","Maya Commands", "PySide6"],
+    github:"https://github.com/Wang-Walexr/UVSet_Cleanup_Tool",
+    gallery:[
+      {caption:"UV Set interface", image:"assets/gallery-uv-set-ui.png"},
+      // {caption:"Cable output in scene", image:""}
+    ]
+  },
+
+  {
+    id:"character-rigging",
+    title:"Character Rigging",
+    shortDesc:"Built and maintained production-ready character rigs for Quiva’s Edge of Infinity",
+    category:["professional"],
+    tags:["Autodesk Maya", "Unity", "Unreal"],
+    videoId:"Svo4iBICcfI",
+    thumbnail:"assets/character-rigging-thumb.png",
+    disclaimer:"This work was produced during my employment at Quiva Games for the title Edge of Infinity. All footage, character assets, and game content shown here are the intellectual property of Quiva Games. Shown strictly for portfolio and demonstration purposes.",
+    tools:["Autodesk Maya","Unity","Unreal", "Advanced Skeleton"],
+    github:"#",
+    gallery:[
+      {caption:"Mabel Rig", image:"assets/gallery-mabel-rig.png"},
+      {caption:"TJ Rig", image:"assets/gallery-tj-rig.png"},
+      {caption:"Obi Rig", image:"assets/gallery-obi-rig.png"},
+      {caption:"Sarki Rig", image:"assets/gallery-sarki-rig.png"}
+    ]
+  },
+
+  {
+    id:"weapon-rigging",
+    title:"Weapon Rigging",
+    shortDesc:"Built production-ready weapon rigs for Quiva’s Edge of Infinity, focusing on animator usability, modularity, and seamless integration into the game pipeline.",
+    category:["professional"],
+    tags:["Autodesk Maya", "Unity", "Unreal"],
+    videoId:"bJOzpWbm0ao",
+    thumbnail:"assets/weapon-rigging-thumb.png",
+    disclaimer:"This work was produced during my employment at Quiva Games for the title Edge of Infinity. All footage, weapon assets, and game content shown here are the intellectual property of Quiva Games. Shown strictly for portfolio and demonstration purposes.",
+    tools:["Autodesk Maya","Unity","Unreal", "Advanced Skeleton"],
+    github:"#",
+    gallery:[
+      {caption:"Gun-1 Rig", image:"assets/gallery-gun1-rig.png"},
+      {caption:"Gun-2 Rig", image:"assets/gallery-gun2-rig.png"},
+      {caption:"Gun-3 Rig", image:"assets/gallery-gun3-rig.png"},
+      {caption:"Gun-4 Rig", image:"assets/gallery-gun4-rig.png"}
+    ]
+  },
+
+  {
+    id:"anim-testing-optimization",
+    title:"Animation Testing and Optimization",
+    shortDesc:"Performed post-animation optimization on character assets and handled engine integration for testing, ensuring performance, stability, and pipeline readiness before developer handoff.",
+    category:["professional"],
+    tags:["Autodesk Maya", "Animation", "Unreal", "Optimization"],
+    videoId:"8i4-1sDGJJc",
+    thumbnail:"assets/character-rigging-thumb.png",
+    disclaimer:"This work was produced during my employment at Quiva Games for the title Edge of Infinity. All footage, character assets, and game content shown here are the intellectual property of Quiva Games. Shown strictly for portfolio and demonstration purposes.",
+    tools:["Autodesk Maya","Unreal",],
+    github:"#",
+    gallery:[]
+  },
+
+  {
+    id:"procedural-landscape-path",
+    title:"Procedural Path Generator",
+    shortDesc:"A procedural tool built in Houdini that generates realistic, terrain-aware paths (roads, trails, walkways) across complex landscapes.",
+    category:["tools"],
+    tags:["Houdini","VEX", "Procedural"],
+    videoId:"ScpQZmP3Hw0",
+    thumbnail:"assets/landscape-path-thumb.png",
+    problem:"Creating believable paths in large environments is slow, repetitive, and difficult to iterate on. Manual sculpting becomes a bottleneck, especially when terrain or level design changes frequently, leading to inconsistent results and reduced production efficiency.",
+    solution:"A procedural system that generates paths from simple inputs like start and end points while analyzing terrain data such as slope, elevation, and curvature. The tool produces natural-looking paths that automatically update as the environment changes, enabling rapid iteration and scalable content creation.",
+    result:"A Terrain-aware path generation that avoids steep and unrealistic routes with parametric controls. Real-time, non-destructive iteration driven by Houdini’s procedural workflow",
+    tools:["Houdini","VEX"],
+    github:"#",
+    gallery:[
+      {caption:"Bottle HDA UI", image:"assets/gallery-hda-bottle-ui.png"},
+
+    ]
+  },
+
+  {
+    id:"procedural-bottle-generator",
+    title:"Procedural Bottle Generator",
+    shortDesc:"A Houdini-based procedural tool for generating customizable bottle assets with adjustable parameters, designed for efficient asset creation and real-time use.",
+    category:["tools"],
+    tags:["Houdini","VEX","HDA", "Procedural"],
+    videoId:"CueDIvh1oD4",
+    thumbnail:"assets/proc-bottle_thumb.png",
+    problem:"Creating multiple bottle variations manually is time-consuming and limits flexibility when iterating on shapes, proportions, and design variations",
+    solution:"A procedural system that generates bottles using parametric controls, allowing artists to quickly create and iterate on different shapes and styles while maintaining consistency and efficiency.",
+    result:"A Parametric bottle generation tool with customizable shapes and proportions and procedural control over design variations through its UI parameter interface and outputs a game ready mesh",
+    tools:["Houdini","VEX"],
+    github:"#",
+    gallery:[
+      {caption:"Bottle HDA UI", image:"assets/gallery-hda-bottle-ui.png"},
+      {caption:"Bottle Gen", image:"assets/proc-bottle_thumb.png"},
+    ]
+  },
+
+  /* ADD NEW PROJECTS HERE — copy an object above this line, change every field.
+     "category" is an array — a project can belong to more than one filter tab. */
+];
+
+const WORK_FILTER_LABELS = {
+  all:"All", tools:"Tools & Pipeline", shaders:"Shaders & Materials", professional:"Professional"
+};
+
+function renderWorkFilters(){
+  const cats = ['all', ...new Set(PROJECTS.flatMap(p=>p.category))];
+  const row = document.getElementById('workFilters');
+  row.innerHTML = cats.map((c,i)=>
+    `<button class="filter-btn ${i===0?'active':''}" onclick="filterWork('${c}', this)">${WORK_FILTER_LABELS[c] || c}</button>`
+  ).join('');
+}
+
+function workThumbHtml(p){
+  return p.thumbnail
+    ? `<img src="${p.thumbnail}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover">`
+    : p.title;
+}
+
+function renderWork(filter){
+  const grid = document.getElementById('workGrid');
+  grid.innerHTML = '';
+  const list = filter === 'all' ? PROJECTS : PROJECTS.filter(p => p.category.includes(filter));
+  list.forEach(p=>{
+    const a = document.createElement('a');
+    a.className = 'work-card';
+    a.href = '#/project/' + p.id;
+    a.innerHTML = `
+      <div class="work-thumb">${workThumbHtml(p)}</div>
+      <div class="work-body">
+        <div class="work-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div class="work-title">${p.title}</div>
+        <div class="work-desc">${p.shortDesc}</div>
+      </div>`;
+    grid.appendChild(a);
+  });
+  workExpanded = false;
+  collapseGrid(grid, WORK_COLLAPSE_ROWS, 'workExpandBtn');
+}
+function filterWork(cat, btn){
+  document.querySelectorAll('#workFilters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderWork(cat);
+}
+
+function renderWorkCard(p){
+  return `<a class="work-card" href="#/project/${p.id}">
+    <div class="work-thumb">${workThumbHtml(p)}</div>
+    <div class="work-body">
+      <div class="work-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="work-title">${p.title}</div>
+      <div class="work-desc">${p.shortDesc}</div>
+    </div></a>`;
+}
+
+function showProject(id){
+  const p = PROJECTS.find(x=>x.id===id);
+  if(!p) return;
+  document.querySelectorAll('[id^="page-"]').forEach(pg => pg.classList.add('hidden'));
+  document.getElementById('page-project').classList.remove('hidden');
+
+  document.getElementById('projTags').innerHTML = p.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('projTitle').textContent = p.title;
+  document.getElementById('projSub').textContent = p.shortDesc;
+  document.getElementById('projVideo').innerHTML = videoEmbed(p.videoId || PLACEHOLDER_VIDEO_ID);
+  document.getElementById('projGallery').innerHTML = (p.gallery || []).map(g =>
+    g.image
+      ? `<div class="proj-gallery-item lightbox-trigger" data-image="${g.image}" data-alt="${g.caption}"><img src="${g.image}" alt="${g.caption}"></div>`
+      : `<div class="proj-gallery-item">${g.caption}</div>`
+  ).join('');
+
+  if(p.disclaimer){
+    document.getElementById('projBreakdown').innerHTML = `
+      <div class="bd-block disclaimer-box">
+        <div class="bd-label">Disclaimer</div>
+        <div class="bd-text">${p.disclaimer}</div>
+      </div>
+    `;
+  } else {
+    document.getElementById('projBreakdown').innerHTML = `
+      <div class="bd-block"><div class="bd-label">Problem</div><div class="bd-text">${p.problem}</div></div>
+      <div class="bd-block"><div class="bd-label">Solution</div><div class="bd-text">${p.solution}</div></div>
+      <div class="bd-block"><div class="bd-label">Result</div><div class="bd-text">${p.result}</div></div>
+    `;
+  }
+
+  document.getElementById('projSidebar').innerHTML = `
+    <div class="side-card">
+      <h4>Tools Used</h4>
+      <div class="work-tags">${p.tools.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+    <div class="side-card">
+      <h4>Links</h4>
+      <a class="side-link" href="${p.github}" target="_blank">⌥ View on GitHub</a>
+    </div>
+  `;
+
+  const others = PROJECTS.filter(x=>x.id!==id).slice(0,3);
+  document.getElementById('moreProjects').innerHTML = others.map(renderWorkCard).join('');
+}
+
+// ============ NOTES DATA ============
+const NOTES = [
+  {
+  id:"euw-cross-class-dispatcher-quirk",
+  title:"When a Widget Can See another Widget's Variables But None of Its Functions",
+  date:"13th July 2026",
+  category:["Blueprint", "Debugging"],
+  summary:"A cross-class Blueprint call that should have worked didn't. Variables resolved fine butnevery function silently refused to appear. Here's how I isolated it, and the pattern that replaced it.",
+  image:"",
+  body:`
+    <p>Building the remove-rule button for a per-row widget (<code>WBP_RuleRow</code>) inside my naming convention checker tool, I gave the row a typed reference back to its parent EUW (<code>ParentRef</code>, type <code>EUW_NamingChecker Object Reference</code>) so it could call <code>RemoveRule(Index)</code> directly. Standard parent-child pattern, should have been trivial.</p>
+    <p>Dragging off <code>ParentRef</code> and searching for <code>RemoveRule</code> found nothing. Not filtered out, not greyed, absent from the list entirely, even with Context Sensitive turned off too.</p>
+        
+    <img class="note-body-img lightbox-trigger" src="assets/widget-parent-child-issue-post1.png" alt="No Function Seen">
+    <img class="note-body-img lightbox-trigger" src="assets/widget-parent-child-issue-post2.png" alt="Variables Seen">
+
+    <h3>Ruling things out one at a time</h3>
+    <p>In order, all of these turned out not to be the cause:</p>
+    <ul>
+      <li>Access Specifier on <code>RemoveRule</code> - already Public</li>
+      <li>Stale compile - recompiled both Blueprints in order, then fully restarted the editor</li>
+      <li>A duplicate/stale asset - confirmed only one <code>EUW_NamingChecker</code> existed in the project</li>
+      <li>The function itself being broken somehow - created a brand new, completely empty <code>TestFunction</code> with a single Print String, Public, freshly compiled, it didn't appear either</li>
+    </ul>
+    <p>That last test was the useful one: if a trivial new function has the identical symptom, the problem isn't about any specific function, it's about whether <code>WBP_RuleRow</code> can call <em>any</em> function on <code>EUW_NamingChecker</code> through that reference at all. And yet variables on the same reference worked completely normally the whole time.</p>
+    <h3>The fix I used: sidestep it with an Event Dispatcher</h3>
+    <p>Rather than keep chasing the exact mechanism, I removed the direct parent reference entirely. <code>WBP_RuleRow</code> now owns an Event Dispatcher, <code>OnRemoveClicked(Index)</code>, and knows nothing about <code>EUW_NamingChecker</code> as a class:</p>
+    <pre><code>// WBP_RuleRow, on the remove button:
+On Clicked (Btn_Remove)
+- Call OnRemoveClicked(Index: RuleIndex)</code></pre>
+    <p>The parent binds to it instead of being called into directly:</p>
+    <pre><code>// EUW_NamingChecker, when spawning each row:
+Create Widget (WBP_RuleRow) - NewRow
+- Bind Event to OnRemoveClicked (on NewRow)
+    - HandleRuleRemoved(Index) - RemoveRule(Index)</code></pre>
+    <p>This also removed a circular reference that existed before (parent creates child, child references parent back), which was arguably worth eliminating regardless of whether it was the actual cause.</p>
+    <h3>The honest part</h3>
+    <p>I still don't know the exact underlying reason cross-class function calls failed while variable access on the identical reference didn't. I tested access specifiers, duplicate assets, compile order, and a full editor restart, and none of them were the cause. The dispatcher pattern sidesteps the problem entirely and is arguably the more correct architecture anyway, so that's what shipped. If you've hit this exact symptom in UE5.7 and know the actual root cause, I'd genuinely like to hear it.</p>
+  `
+},
+{
+  id:"building-the-optimization-auditor",
+  title:"Building an Optimization Auditor for UE5: From Spec to Shipped Tool",
+  date:"10th July 2026",
+  category:["Tool Design", "Optimization", "UE5"],
+  summary:"A case study on building a platform-aware performance audit tool for UE5. The decisions, the wrong turns, and why the finished tool auto-fixes less than it originally could have.",
+  image:"assets/optimization-auditor-post-banner.png",
+  body:`
+    <p>I wanted a tool that could look at a UE5 project; scene or asset folder, and tell me exactly what was hurting performance, with the reasoning shown, not just a red flag with no explanation. This is a walkthrough of how it actually got built, including the parts that changed along the way.</p>
+
+    <h3>Starting with a spec, not code</h3>
+    <p>Before opening the Widget Designer, I wrote a full specification on what the tool checks, what counts as CRITICAL versus WARNING issues, which fixes are safe to automate, and, just as importantly, what's explicitly out of scope for version one. Writing this down first meant the build had a target to check against, rather than growing organically into something unfocused. The full spec is on <a href="https://github.com/Wang-Walexr/ue5-optimization-auditor/blob/main/SPEC.md" target="_blank">GitHub</a>.</p>
+
+    <h3>The UI came before the logic</h3>
+    <p>The entire Editor Utility Widget shell was built and tested with placeholder data before a single line of audit logic existed. Platform and Frame Target selectors drive a collapsible <code>Expandable Area</code> holding the threshold Spin Boxes; a Scan Target section reads the live Content Browser selection; Scene Audit and Asset Audit sit as two buttons above a single shared results panel.</p>
+    <p>Every result; PASS or FAIL, is one instance of a reusable child widget, <code>WBP_ResultRow</code>, rather than hand-built per row. Each row owns its own severity dot, label, description, and AUTO/MANUAL badge, set through a single <code>SetupRow()</code> function:</p>
+    <pre><code>SetupRow(AssetName, IssueText, Severity, FixType, AssetPath, FixFunctionName)
+- Branch on Severity:
+    "CRITICAL" - Border_SeverityDot color = Red
+    "WARNING"  - Border_SeverityDot color = Yellow
+    "INFO"     - Border_SeverityDot color = White
+    "PASS"     - Border_SeverityDot color = Green
+- Branch on FixType:
+    "AUTO"    - Border_FixType styled green-tinted
+    "MANUAL"  - Border_FixType styled grey-tinted</code></pre>
+    <p>Because the whole UI existed and could be visually verified before any Python was wired in, every layout decision got made without the pressure of "but does it work yet". And by the time real audit logic arrived, the interface itself was already stable and just needed real data flowing into it.</p>
+
+    
+
+    <h3>How a scan actually becomes a row on screen</h3>
+    <p>Clicking Asset Audit or Scene Audit runs a Python function through an <code>Execute Python Script</code> node, which returns one pipe-delimited string, one line per finding, that Blueprint splits and turns into rows:</p>
+    <pre><code>results = run_asset_audit(folder, max_texture_size, lod_triangle_threshold, frame_target)
+audit_results = format_results_for_blueprint(results)
+# - "name|path|issue|severity|fix_type|fix_function" per line</code></pre>
+    <p>Frame Target isn't just a label in the UI. It directly scales the threshold each finding is checked against, before any comparison happens:</p>
+    <pre><code>FRAME_TARGET_MULTIPLIERS = {30: 1.2, 60: 1.0, 120: 0.7}
+multiplier = FRAME_TARGET_MULTIPLIERS.get(frame_target, 1.0)
+adjusted_lod_threshold = int(lod_triangle_threshold * multiplier)</code></pre>
+    <p>A mesh with 4,500 triangles passes cleanly against a 6,000-triangle threshold at 30fps, and fails against a 3,500-triangle threshold at 120fps. Same mesh, same triangle count, different verdict, because the available frame budget genuinely changed what counts as a problem. The issue text shown to the artist includes the exact adjusted number and target used, so the flag is never a mystery.</p>
+    <p>On the fix side, Fix Selected and Fix All both funnel through one Python dispatcher rather than four separate wiring paths in Blueprint:</p>
+    <pre><code>FIX_DISPATCH = {
+    "generate_lods": generate_lods,
+    "enable_nanite": enable_nanite,
+    "fix_srgb_off": fix_srgb_off,
+    "enable_mipmaps": enable_mipmaps,
+}
+def run_fix(fix_function_name, asset_path):
+    func = FIX_DISPATCH.get(fix_function_name)
+    return func(asset_path) if func else (False, f"Unknown fix: {fix_function_name}")</code></pre>
+    <p>Blueprint only ever calls <code>run_fix()</code> once per row, passing whatever function name that row was tagged with. A fifth fix type later means one new dictionary entry and a function, no new Blueprint graph required.</p>
+
+    <h3>Two checks that turned out to be one check</h3>
+    <p>I originally built "missing LODs" and "Nanite disabled" as two independent checks. It didn't take long to notice a mesh could get flagged by both at once, with contradictory advice, since Nanite replaces LODs entirely rather than working alongside them. The fix was combining them into a single decision tree per mesh; check Nanite eligibility first, and only fall back to the LOD path if the mesh's materials disqualify it from Nanite. <a href="#/notes/nanite-lod-decision-tree">The full breakdown is here</a>.</p>
+    
+    <h3>Automating less than I could have</h3>
+    <p>The instinct when building any audit tool is to automate everything it flags. I resisted that. Some fixes like regenerating LODs, enabling Nanite, correcting sRGB, restoring mipmaps, are reversible and purely technical, so the tool applies them directly. Note that these are mainly fixed on the Asset Audit, not Scene Audit. Others like reducing material slots, converting meshes to instances, changing light mobility, involve artistic or gameplay tradeoffs the tool has no basis to decide alone. Those get flagged with a clear explanation instead of a fix button. <a href="#/notes/auto-vs-manual-fix">I wrote more on that reasoning here</a>.</p>
+    
+    <h3>What testing looked like</h3>
+    <p>Every fix function was tested on duplicated copies of problem assets before ever touching real project data. Generate LODs, enable Nanite, disable mipmaps, flip sRGB, each verified independently in the Python console before being wired into a button. Fix Selected and Fix All were then tested against a dedicated scratch folder, fixed, re-scanned, and confirmed clean, before being considered done.</p>
+
+    <img class="note-body-img lightbox-trigger" src="assets/optimization-auditor-post-test1.png" alt="Asset Audit Test">
+    <img class="note-body-img lightbox-trigger" src="assets/optimization-auditor-post-test2.png" alt="Scene Audit Test">
+
+    <h3>Where it ended up</h3>
+    <p>Two audit modes, platform-aware and frame-budget-aware thresholds, a unified Nanite/LOD decision system, and a fix system that's honest about what it can and can't safely decide on its own. The full source, spec, and setup instructions are on <a href="https://github.com/Wang-Walexr/ue5-optimization-auditor" target="_blank">GitHub</a>.</p>
+  `
+  },
+  {
+    id:"nanite-lod-decision-tree",
+    title:"Why My Optimization Tool Won't Enable Nanite and Generate LODs on the Same Mesh",
+    date:"5th July 2026",
+    category:["Optimization", "UE5"],
+    summary:"Nanite replaces traditional LODs entirely for the meshes it supports. So a tool that does both is wasting work, not doubling up on safety.",
+    image:"",
+    body:`
+      <p>Early in building my asset optimization checks, I had two independent rules: flag meshes with no LODs, and separately, flag meshes with Nanite disabled. It seemed reasonable, two checks, two fixes, more coverage.</p>
+      <p>Then I noticed a mesh could get flagged by both rules at once, with two separate auto-fix suggestions: generate LODs, and also enable Nanite. Running both would mean generating a full LOD chain and then immediately making it irrelevant by turning on Nanite, which manages its own detail levels internally and ignores manual LODs entirely.</p>
+      <h3>The real relationship between Nanite and LODs</h3>
+      <p>Nanite doesn't complement traditional LODs, it replaces them for any mesh it supports. Once Nanite is enabled, Unreal disregards whatever LOD chain exists on that mesh. So treating "missing LODs" and "Nanite disabled" as two independent problems was wrong; they're two branches of the same decision, not two separate issues.</p>
+      <h3>The fix: one decision tree, not two checks</h3>
+      <pre><code>Is the mesh a Nanite candidate?
+      (opaque material: Nanite doesn't support translucent or masked blend modes)
+
+        Yes - Is Nanite already enabled?
+          No - flag: enable Nanite
+          Yes - pass, nothing else needed
+
+        No - Does it have LODs?
+          No - flag: generate LOD chain
+          Yes - pass
+</code></pre>
+      <p>A mesh now goes down exactly one path. No double flags, no wasted fixes, no contradictory recommendations sitting side by side in the results panel.</p>
+      <h3>How the Nanite check actually works</h3>
+      <p>Determining eligibility means walking every material slot on the mesh and checking blend mode. A single translucent or masked material anywhere on the mesh disqualifies the whole thing from Nanite, even if every other slot is opaque:</p>
+      <pre><code>def is_nanite_candidate(mesh):
+    static_materials = mesh.get_editor_property('static_materials')
+    for slot in static_materials:
+        material = slot.get_editor_property('material_interface')
+        if material and material.get_blend_mode() in [
+            unreal.BlendMode.BLEND_TRANSLUCENT,
+            unreal.BlendMode.BLEND_MASKED
+        ]:
+            return False
+    return True</code></pre>
+      <p>This caught a tree mesh in my test scene with translucent material in one of its material slots. Correctly disqualified from Nanite and routed down the LOD path instead, while opaque rock and prop meshes routed toward Nanite as expected.</p>
+    `
+  },
+  {
+    id:"auto-vs-manual-fix",
+    title:"The Difference Between 'Can Automate' and 'Should Automate' in Pipeline Tools",
+    date:"3rd July 2026",
+    category:["Tool Design", "UE5"],
+    summary:"Why my optimization tool auto-fixes LODs and Nanite but only recommends fixes for material slots, instancing, and lighting.",
+    image:"",
+    body:`
+      <p>When I started building an optimization audit tool for Unreal Engine 5, my first instinct was: the more the tool can fix automatically, the better.</p>
+      <p>That instinct turned out to be wrong, and figuring out why changed how I think about pipeline tools entirely.</p>
+      <h3>The rule I landed on</h3>
+      <p>If a fix is reversible and purely technical, automate it. If a fix requires an artistic or gameplay judgement call, flag it clearly and explain why, but don't touch it.</p>
+      <h3>Safe to automate</h3>
+      <ul>
+        <li>Generating a missing LOD chain, reversible, no visual data lost</li>
+        <li>Enabling Nanite on a qualifying mesh, reversible, purely technical</li>
+        <li>Correcting a wrong sRGB setting on a texture, reversible, no data loss</li>
+        <li>Re-enabling disabled mipmaps, reversible, no data loss</li>
+      </ul>
+      <h3>Recommend only, never auto-fix</h3>
+      <ul>
+        <li>Reducing material slots, requires texture atlasing, an artistic decision</li>
+        <li>Converting meshes to instanced rendering, could break per-instance custom properties</li>
+        <li>Changing light mobility from dynamic to static, affects gameplay and requires a lighting rebuild</li>
+      </ul>
+      <p>The pattern that emerged: technical debt is safe to clean up automatically. Artistic and design decisions are not, even when the "fix" is technically simple to execute.</p>
+      <h3>Why this matters more than it sounds</h3>
+      <p>A tool that silently changes an artist's work without warning destroys trust fast. A tool that clearly explains what's wrong, why, and what to do about it, without touching anything it shouldn't, that kind of tool builds trust.</p>
+    `
+  },
+
+
+  {
+    id:"struct-vs-object-lesson",
+    title:"Struct vs Object in Blueprint: A Design Decision I Got Wrong, Then Fixed",
+    date:"1st July 2026",
+    category:["Blueprint", "UE5"],
+    summary:"I built a settings container as a Blueprint Object because of a UI widget I planned to use, then removed that widget and never revisited the decision.",
+    image:"",
+    body:`
+      <p>While building the settings panel for my optimization tool, I created a Blueprint Object class to hold threshold values. The reasoning at the time was sound: I planned to use Unreal's DetailsView widget to auto-generate the settings UI, and DetailsView only works with UObjects, not structs.</p>
+      <p>Later in the build, I decided DetailsView's default styling didn't match the rest of my custom UI, so I removed it and built the settings fields manually instead. The Blueprint Object stuck around, unquestioned, because it was already working.</p>
+      <h3>Why that was the wrong container, in hindsight</h3>
+      <p>Structs are value types, copying one gives you an independent copy. Objects are reference types, every variable holding that object points to the same underlying instance. For a simple data container of five integers with no shared mutable state, a struct is the lighter, more correct choice: no construction step, no garbage collection overhead, and it passes cleanly by value into functions.</p>
+      <h3>The fix</h3>
+      <p>Converting to a Blueprint Structure removed the construction step entirely. Building a preset became a single creation of a Struct asset with all 5 values and their datatypes, and create variables of the struct asset with literal values plugged in directly, and passing it into functions required no casting or object references.</p>
+      <h3>The actual lesson</h3>
+      <p>A design decision made for a specific reason needs to be revisited the moment that reason disappears. It's easy to keep a piece of architecture just because it's already working, without asking whether the original justification for it still holds.</p>
+    `
+  },
+  {
+    id:"ue5-deprecated-apis",
+    title:"UE5.7's Silent API Migration: A Pattern, Not Random Breakage",
+    date:"28th June 2026",
+    category:["Python", "UE5", "API"],
+    summary:"The subsystem migration pattern behind most UE5 Python deprecation warnings, and how to predict the fix yourself.",
+    image:"",
+    body:`
+      <p>If you're scripting Unreal Engine 5.7 in Python, you'll eventually hit a DeprecationWarning on a function copied from a tutorial or older documentation. This happened to me three separate times, and each time the fix followed the exact same pattern.</p>
+      <h3>The pattern</h3>
+      <p>Static libraries are being replaced by editor subsystems across the board. Instead of calling a global library function directly, you retrieve a subsystem first, then call the method on that subsystem.</p>
+      <pre><code>Old: EditorLevelLibrary.get_all_level_actors()
+      New: get_editor_subsystem(EditorActorSubsystem).get_all_level_actors()
+
+      Old: EditorStaticMeshLibrary.set_lods()
+      New: get_editor_subsystem(StaticMeshEditorSubsystem).set_lods()</code></pre>
+      <p>Once I recognised this pattern, fixing new deprecation warnings became fast. Instead of searching for a fix, I'd search for which subsystem now owns that functionality.</p>
+      <h3>A quick way to explore what's available</h3>
+      <pre><code>subsystem = get_editor_subsystem(StaticMeshEditorSubsystem)
+      print(dir(subsystem))</code></pre>
+      <p>This prints every method available, letting you find the current correct function name without waiting on documentation to catch up.</p>
+      <p>If you're hitting AttributeErrors or DeprecationWarnings in UE5 Python, check for a subsystem equivalent first. There usually is one.</p>
+    `
+  },
+  // {
+  //   /* TEST DUPLICATE — added purely to verify the 5-row scroll limit on the
+  //      Dev Log grid. Delete this whole object once you have enough real
+  //      posts to test with, or keep duplicating it further while testing —
+  //      at 2 columns you need 11+ total notes for row 6 to appear and the
+  //      scrollbar to kick in. */
+  //   id:"struct-vs-object-lesson-test-duplicate",
+  //   title:"[TEST DUPLICATE] Struct vs Object in Blueprint",
+  //   date:"July 2026",
+  //   category:["Blueprint"],
+  //   summary:"Duplicate entry used only to test the Dev Log row-limit scroll behavior. Safe to delete.",
+  //   image:"",
+  //   body:`
+  //     <p>This is a duplicate of the Struct vs Object post, used only to help verify the Dev Log grid's scroll-after-5-rows behavior. Delete this entry once you have enough real posts, or keep it while you're still testing.</p>
+  //   `
+  // },
+  
+  /* ADD NEW DEV LOG NOTES HERE — copy an object above this line, change every field.
+     "category" is an ARRAY here, same as PROJECTS — a note can belong to
+     more than one filter tab, e.g. category:["Python","Tool Design"].
+     Using a new category name automatically creates a new filter tab.
+     "image" — paste an image URL/filename for a banner image, or leave as
+     "" for none. To add images inside the post body itself, see the
+     instructions at the top of this script block. */
+];
+
+function renderNoteFilters(){
+  const cats = ['All', ...new Set(NOTES.flatMap(n=>n.category))];
+  const row = document.getElementById('noteFilters');
+  row.innerHTML = cats.map((c,i)=>
+    `<button class="filter-btn ${i===0?'active':''}" onclick="filterNotes('${c}', this)">${c}</button>`
+  ).join('');
+}
+
+function renderNotes(filter){
+  const list = document.getElementById('notesList');
+  const items = (filter === 'All' || !filter) ? NOTES : NOTES.filter(n=>n.category.includes(filter));
+  list.innerHTML = items.map(n=>`
+    <a class="note-card" href="#/notes/${n.id}">
+      <div class="note-meta">
+        <span class="note-date">${n.date}</span>
+        ${n.category.map(c=>`<span class="tag">${c}</span>`).join('')}
+      </div>
+      <div class="note-title">${n.title}</div>
+      <div class="note-summary">${n.summary}</div>
+    </a>
+  `).join('');
+  notesExpanded = false;
+  collapseGrid(list, NOTES_COLLAPSE_ROWS, 'notesExpandBtn');
+}
+function filterNotes(cat, btn){
+  document.querySelectorAll('#noteFilters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotes(cat);
+}
+
+function showNote(id){
+  const n = NOTES.find(x=>x.id===id);
+  document.querySelectorAll('[id^="page-"]').forEach(pg => pg.classList.add('hidden'));
+  if(!n){
+    document.getElementById('page-notes').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('page-note-detail').classList.remove('hidden');
+  document.getElementById('noteDate').textContent = n.date;
+  document.getElementById('noteTags').innerHTML = n.category.map(c=>`<span class="tag">${c}</span>`).join('');
+  document.getElementById('noteTitle').textContent = n.title;
+  const imageHtml = n.image ? `<img class="note-image lightbox-trigger" src="${n.image}" alt="${n.title}">` : '';
+  document.getElementById('noteBody').innerHTML = imageHtml + n.body;
+}
+
+// ============ STATIC DATA (stack chips, experience, education) ============
+const STACK = ["Unreal Engine 5","Blueprint","Python","Maya","Houdini","Blueprint","HLSL","VEX", "Git", "Datasmith", "C++", "C#"];
+document.getElementById('stackRow').innerHTML = STACK.map(s=>`<span class="stack-chip">${s}</span>`).join('');
+
+const EXPERIENCE = [
+  {
+    company:"Quiva Games", period:"2021 - 2025", role:"Technical Artist - Edge of Infinity",
+    desc:"Character rigging pipelines, Houdini procedural tooling (wire generator HDA), Python asset automation, and optimization passes for real-time performance targets.",
+    trailer:"https://www.youtube.com/watch?v=ncWh_Wqn-KY",
+    tags:["Unity", "Unreal","Python","Houdini","Maya", "Spine", "Cocos2D"]
+  },
+
+  {
+    company:"Liqair Studios", period:"2021 - 2022", role:"Technical Artist",
+    desc:"Technical support and visual guidance to 3D artists, rigging, R&D to improve visual output, productivity and asset consistency.",
+    trailer:"",
+    tags:["Maya", "Substance Painter","Arnold","3d Modeling","Lighting", "Rendering", ]
+  }
+  /* ADD NEW EXPERIENCE ENTRIES HERE — copy the object above.
+     "trailer" is optional — a YouTube link shown just above the tags.
+     Leave it as an empty string "" if there's no trailer yet; the
+     link simply won't render until you add one. */
+];
+document.getElementById('expList').innerHTML = EXPERIENCE.map(e=>`
+  <div class="exp-item">
+    <div><div class="exp-company">${e.company}</div><div class="exp-period">${e.period}</div></div>
+    <div>
+      <div class="exp-role">${e.role}</div>
+      <p class="exp-desc">${e.desc}</p>
+      ${e.trailer ? `<a class="trailer-link" href="${e.trailer}" target="_blank">▶ Watch Trailer</a>` : ''}
+      <div class="work-tags">${e.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  </div>
+`).join('');
+
+const EDUCATION = [
+  {
+    school:"University of Skövde", year:"2025 - 2026",
+    degree:"Master's - Games, Aesthetics and Narration",
+    note:"Thesis on adaptive environment systems. Weighted composite scoring and response controllers for personalised atmospheric response.",
+    tags:["Worldbuilding","Environmental Storytelling","Narrative Theories"]
+  },
+  {
+    school:"University of Ilorin", year:"2014 - 2019",
+    degree:"Bachelor's - Computer Engineering",
+    note:"Foundation in software engineering, systems design, and programming that underpins current tools & pipeline work.",
+    tags:["System Design","Automation","IOT","Software development"]
+  }
+  /* ADD NEW EDUCATION ENTRIES HERE — copy an object above.
+     "tags" is optional — leave it as an empty array [] to show none. */
+];
+document.getElementById('eduList').innerHTML = EDUCATION.map(e=>`
+  <div class="edu-item">
+    <div><div class="edu-school">${e.school}</div><div class="edu-year">${e.year}</div></div>
+    <div>
+      <div class="edu-degree">${e.degree}</div>
+      <p class="edu-note">${e.note}</p>
+      ${e.tags && e.tags.length ? `<div class="work-tags">${e.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+    </div>
+  </div>
+`).join('');
+
+// ============ INIT ============
+renderWorkFilters();
+renderWork('all');
+renderNoteFilters();
+renderNotes('All');
+router();
+</script>
+</body>
+</html>
