@@ -248,7 +248,7 @@ footer p{font-size:.8rem;color:var(--text-secondary)}
       </video>
     </div>
     <div class="hero-inner">
-      <div class="hero-eyebrow">Technical Artist - Tools &amp; Pipeline | Shaders </div>
+      <div class="hero-eyebrow">Technical Artist - Tools &amp; Pipeline | Optimization | Shaders </div>
       <h1 class="hero-name">Hi, I'm Adewale.</h1>
       <p class="hero-tagline">I enjoy building tools and systems that improve productivity
         (editor utilities, optimization pipelines, python and shaders) majorly in Unreal Engine 5.
@@ -256,7 +256,7 @@ footer p{font-size:.8rem;color:var(--text-secondary)}
       <div class="btn-row">
         <a href="https://www.linkedin.com/in/adewaleabdulkabir/" target="_blank" class="btn btn-secondary">LinkedIn</a>
         <a href="https://github.com/Wang-Walexr" target="_blank" class="btn btn-secondary">GitHub</a>
-        <a href="assets/Adewale_CV.pdf" download="Adewale_CV" target="_blank" class="btn btn-primary">Download CV</a>
+        <a href="assets/Adewale_Hafeez_Abdulkabir_CV.pdf" download="Adewale_Hafeez_Abdulkabir_CV" target="_blank" class="btn btn-primary">Download CV</a>
       </div>
     </div>
   </section>
@@ -290,7 +290,7 @@ footer p{font-size:.8rem;color:var(--text-secondary)}
           forget exists, because it never breaks, never gets in the way,
           and just makes everything faster."</div>
           <div class="stack-row" id="stackRow"></div>
-          <a href="assets/Adewale_CV.pdf" download="Adewale_CV" target="_blank" class="btn btn-primary">Download CV</a>
+          <a href="assets/Adewale_Hafeez_Abdulkabir_CV.pdf" download="Adewale_Hafeez_Abdulkabir_CV" target="_blank" class="btn btn-primary">Download CV</a>
         </div>
       </div>
     </section>
@@ -309,7 +309,7 @@ footer p{font-size:.8rem;color:var(--text-secondary)}
   <section id="contact">
     <div class="container">
       <h2 class="contact-title">Looking for a Technical Artist?</h2>
-      <p class="contact-sub">Open to full-time, contract, and remote
+      <p class="contact-sub">Open to full-time, contract, both on-site and remote
       opportunities in games and archviz. Reach out any time.</p>
       <div class="btn-row" style="justify-content:center">
         <a href="mailto:ade.waleigh@gmail.com" class="btn btn-primary">Send an email</a>
@@ -691,23 +691,26 @@ const PROJECTS = [
     ]
   },
 
-  // {
-  //   id:"concrete-material",
-  //   title:"PBR Concrete Material System",
-  //   shortDesc:"Archviz master material with AO-driven dirt accumulation and wetness control",
-  //   category:["shaders"],
-  //   tags:["UE5","Materials","PBR"],
-  //   videoId:"AbCdEfGhIjK",
-  //   thumbnail:"assets/optimization-auditor-thumb.png",
-  //   problem:"Archviz materials need to respond to environmental wear without manual painting.",
-  //   solution:"A master material with dirt accumulation driven by the AO channel, plus a wetness parameter affecting roughness and colour. Correct under both Lumen and Path Tracing.",
-  //   result:"Three distinct surface states — clean, dirty, wet — from a single master material.",
-  //   tools:["Unreal Engine 5.7","Material Editor"],
-  //   github:"#",
-  //   gallery:[
-  //     {caption:"Clean / Dirty / Wet comparison render", image:""}
-  //   ]
-  // },
+{
+  id:"toon-shader-system",
+  title:"Stylized Toon Shader System",
+  shortDesc:"A complete cel-shading pipeline for UE5.7. Quantized lighting, custom specular, rim light, and a vertex-stage outline, built as reusable Material Functions",
+  category:["shaders"],
+  tags:["UE5","HLSL","Materials"],
+  thumbnail:"assets/toon-shader_thumb.png",
+  problem:"Physically based rendering exists to look correct. A stylized/NPR shading system needs the opposite, deliberately discarding smooth, physically accurate lighting in favor of controlled, artist-directed steps and exaggerated non-physical highlights, while still being built on a correct understanding of the underlying lighting math rather than guesswork.",
+  solution:"A master material built entirely from custom HLSL logic wrapped into four reusable Material Functions: MF_ToonBands quantizes diffuse lighting into discrete steps, MF_RimLight exaggerates fresnel into a controllable silhouette glow, MF_ToonSpecular produces a hard-edged, non-physical highlight via a step-function cutoff, and MF_OutlineMask drives a separate outline shell built by extruding vertices along their normals in World Position Offset and discarding front-facing polygons, so only the true silhouette edge renders. The full shading result routes through Emissive Color rather than Base Color, deliberately suppressing the engine's automatic PBR lighting response so the hand-authored result is the only thing visible. Applied across all 8 material slots of a full character, skin, eyes, hair, and four clothing materials, each independently tuned rather than sharing one flat look.",
+  result:"A genuinely reusable shading system, not a one-off material. Every core technique lives in a Material Function library usable in any future project. An artist-facing Static Switch toggles the outline on or off per instance with zero runtime branch cost, giving a direct, controllable comparison between the shaded and unshaded silhouette result.",
+  tools:["Unreal Engine 5.7","HLSL","Material Editor","Material Functions"],
+  github:"#",
+  videoId:"D-Gv_d5aadI",
+  gallery:[
+    {caption:"Full character with reference sphere showing the shared master material", image:"assets/gallery_toonshader_wide.png"},
+    {caption:"Close-up, quantized bands, hard specular highlight, and rim light together", image:"assets/gallery_toonshader_close.png"},
+    {caption:"Material Graph 1", image:"assets/gallery_toonshader_mat_graph_1.png"},
+    {caption:"Material Graph 2", image:"assets/gallery_toonshader_mat_graph_2.png"}
+  ]
+},
 
   {
     id:"procedural-cable",
@@ -943,10 +946,54 @@ function showProject(id){
 
 // ============ NOTES DATA ============
 const NOTES = [
-  {
+{
+  id:"building-a-stylized-toon-shader",
+  title:"Building a Stylized Toon Shader: Quantizing Physically Correct Lighting on Purpose",
+  date:"July 2026",
+  category:["Shaders", "Optimization"],
+  summary:"Cel shading isn't a different set of shader math, it's the same PBR lighting math from a physically accurate material, deliberately quantized, exaggerated, and rerouted around the engine's automatic lighting pipeline.",
+  image:"assets/gallery_toonshader_wide.png",
+  body:`
+    <p>A stylized shading system doesn't invent new lighting physics, it takes the same dot-product-driven math behind a physically accurate material and deliberately refuses to display its full, smooth result. Every technique in this piece is a real physical quantity, intentionally distorted on purpose.</p>
+
+    <h3>Quantizing the diffuse response</h3>
+    <pre><code>float NdotL = saturate(dot(Normal, LightDirection));
+float stepped = floor(NdotL * Bands) / Bands;
+return stepped;</code></pre>
+    <p><code>saturate(dot(Normal, LightDirection))</code> is the exact, physically correct Lambertian falloff, the same line behind any standard PBR material. <code>floor(NdotL * Bands)</code> is the actual stylization, applied here to answer "which lighting bucket does this pixel's brightness fall into" out of a fixed number of bands. The physics isn't wrong, it's just no longer allowed to display its continuous range.</p>
+
+    <h3>When adding effects together goes wrong: isolating the actual cause</h3>
+    <p>Stacking rim light, quantized bands, and specular together initially produced a broken result. The lit hemisphere lost its band steps entirely, collapsing into one flat bright zone. The instinct was to suspect the bands themselves. Isolating each term one at a time, routing only <code>saturate(Bands)</code> into Emissive with everything else disconnected, proved the bands were correct on their own. The real cause was Rim's falloff being too broad: at the working <code>RimPower</code> value, fresnel was still contributing meaningful brightness well away from the true silhouette edge, pushing the mid and low bands past the clamp ceiling once summed together and saturated.</p>
+    <p>The fix was narrowing <code>RimPower</code> so <code>pow(1 - NdotV, RimPower)</code> collapsed toward zero much faster away from grazing angle, keeping Rim genuinely confined to the edge instead of quietly washing out everything underneath it. One isolation test turned "something is wrong somewhere" into an exact, specific fix.</p>
+
+    <h3>Routing around the engine's own lighting</h3>
+    <p>The first full test showed a soft, doubled-up highlight, the hand-authored, hard-edged specular was blending with Unreal's own automatic PBR specular response, still running underneath using default Roughness and Specular values, completely unaware a custom lighting model had been built on top of it.</p>
+    <p>The fix is a deliberate architecture choice: Base Color forced to black, Roughness to 1, Specular to 0, starving the engine's automatic lighting contribution down toward zero, with the entire hand-calculated result (bands + rim + specular, summed and clamped) routed through <strong>Emissive Color</strong> instead of Base Color. Emissive bypasses the automatic lighting pipeline entirely rather than feeding into it, which is exactly what a fully custom-lit material needs.</p>
+
+    <h3>Why the outline lives in the vertex stage, not a post-process pass</h3>
+    <p>The classic alternative to this technique is full-screen post-process edge detection, sampling the depth and normal buffers and flagging discontinuities between neighboring pixels. It works, and it can catch outlines <em>between</em> separate overlapping objects, which a per-mesh technique structurally cannot. But its cost is proportional to total screen resolution, every frame, regardless of how much outline is actually needed on screen at that moment. A small character occupying a fraction of the frame still pays the full-screen sampling cost.</p>
+    <p>The vertex-extrusion approach used here instead costs relative to mesh vertex count, not screen pixels, and only for meshes that actually carry the outline material:</p>
+    <pre><code>// World Position Offset
+return VertexNormalWS * Thickness;
+
+// Custom node feeding Emissive, after enabling Two Sided
+clip(-TwoSidedSignValue);
+return OutlineColor;</code></pre>
+    <p>Pushing every vertex outward along its own normal creates a slightly enlarged shell of the same mesh. Discarding front-facing polygons and keeping only back-facing ones means the shell stays hidden behind the real mesh everywhere except the true silhouette edge, where there's nothing in front of it left to hide it. The honest tradeoff: this technique is entirely per-object. It won't outline where two separate characters overlap in front of each other, since it has no awareness of anything beyond its own geometry. For a single hero character, that limitation doesn't matter; for a scene depending on inter-object outlines, post-process would be the correct choice instead.</p>
+
+    <h3>Baked into the asset, not duplicated at runtime</h3>
+    <p>The outline shell for the final character was duplicated as real geometry back in the DCC tool and exported as a second element on the same mesh, so it inherits identical skinning and animation automatically. A character ships with the outline baked into the asset itself; runtime actor duplication is a fine way to prototype the concept on a primitive, but not what a real shipped character does.</p>
+
+    <h3>Where it ended up</h3>
+    <p>Four reusable Material Functions, a master material driven entirely by them, eight independently tuned Material Instances across a full character, and a Static Switch giving direct, artist-facing control over the outline with zero added runtime branch cost.</p>
+    <img class="note-body-img lightbox-trigger" src="assets/four_material_functios_post.png" alt="Four material functions">
+
+  `
+},
+{
   id:"euw-cross-class-dispatcher-quirk",
   title:"When a Widget Can See another Widget's Variables But None of Its Functions",
-  date:"13th July 2026",
+  date:"July 2026",
   category:["Blueprint", "Debugging"],
   summary:"A cross-class Blueprint call that should have worked didn't. Variables resolved fine butnevery function silently refused to appear. Here's how I isolated it, and the pattern that replaced it.",
   image:"",
@@ -984,7 +1031,7 @@ Create Widget (WBP_RuleRow) - NewRow
 {
   id:"building-the-optimization-auditor",
   title:"Building an Optimization Auditor for UE5: From Spec to Shipped Tool",
-  date:"10th July 2026",
+  date:"July 2026",
   category:["Tool Design", "Optimization", "UE5"],
   summary:"A case study on building a platform-aware performance audit tool for UE5. The decisions, the wrong turns, and why the finished tool auto-fixes less than it originally could have.",
   image:"assets/optimization-auditor-post-banner.png",
@@ -1051,7 +1098,7 @@ def run_fix(fix_function_name, asset_path):
   {
     id:"nanite-lod-decision-tree",
     title:"Why My Optimization Tool Won't Enable Nanite and Generate LODs on the Same Mesh",
-    date:"5th July 2026",
+    date:"July 2026",
     category:["Optimization", "UE5"],
     summary:"Nanite replaces traditional LODs entirely for the meshes it supports. So a tool that does both is wasting work, not doubling up on safety.",
     image:"",
@@ -1091,7 +1138,7 @@ def run_fix(fix_function_name, asset_path):
   {
     id:"auto-vs-manual-fix",
     title:"The Difference Between 'Can Automate' and 'Should Automate' in Pipeline Tools",
-    date:"3rd July 2026",
+    date:"July 2026",
     category:["Tool Design", "UE5"],
     summary:"Why my optimization tool auto-fixes LODs and Nanite but only recommends fixes for material slots, instancing, and lighting.",
     image:"",
@@ -1123,7 +1170,7 @@ def run_fix(fix_function_name, asset_path):
   {
     id:"struct-vs-object-lesson",
     title:"Struct vs Object in Blueprint: A Design Decision I Got Wrong, Then Fixed",
-    date:"1st July 2026",
+    date:"June 2026",
     category:["Blueprint", "UE5"],
     summary:"I built a settings container as a Blueprint Object because of a UI widget I planned to use, then removed that widget and never revisited the decision.",
     image:"",
@@ -1141,7 +1188,7 @@ def run_fix(fix_function_name, asset_path):
   {
     id:"ue5-deprecated-apis",
     title:"UE5.7's Silent API Migration: A Pattern, Not Random Breakage",
-    date:"28th June 2026",
+    date:"June 2026",
     category:["Python", "UE5", "API"],
     summary:"The subsystem migration pattern behind most UE5 Python deprecation warnings, and how to predict the fix yourself.",
     image:"",
@@ -1234,7 +1281,7 @@ function showNote(id){
 }
 
 // ============ STATIC DATA (stack chips, experience, education) ============
-const STACK = ["Unreal Engine 5","Blueprint","Python","Maya","Houdini","Blueprint","HLSL","VEX", "Git", "Datasmith", "C++", "C#"];
+const STACK = ["Unreal Engine 5","Blueprint","Python","Maya","Houdini","Blueprint","HLSL", "GLSL","VEX", "Git", "C++", "C#"];
 document.getElementById('stackRow').innerHTML = STACK.map(s=>`<span class="stack-chip">${s}</span>`).join('');
 
 const EXPERIENCE = [
