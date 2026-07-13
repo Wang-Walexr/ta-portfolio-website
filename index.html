@@ -673,6 +673,25 @@ const PROJECTS = [
     ]
   },
   {
+  id:"procedural-damage-system",
+  title:"Procedural Damage/Crack Generation",
+  shortDesc:"A reusable UE5 material system generating cracked/damaged surfaces entirely through math. No sourced crack textures, applied across brick, stone, and plaster",
+  category:["shaders"],
+  tags:["UE5","HLSL","Materials","Procedural"],
+  thumbnail:"assets/procedural-damage_full.png",
+  problem:"Surface damage and cracking in archviz/environment materials is typically achieved by sourcing a pre-made crack texture and blending it in, which means every instance shares the same fixed pattern, tiles visibly at scale, and offers no way to vary crack density, width, or depth per surface type without sourcing additional textures.",
+  solution:"A fully procedural crack network generated from first-principles HLSL using F1/F2 Voronoi distance fields. Thers is no crack texture existing anywhere in the pipeline. The gap between the closest and second-closest cell distances (F2-F1) naturally produces thin lines exactly at cell boundaries, remapped through a reusable Material Function into an artist-controlled width mask. That mask consistently drives four separate material channels: Base Color (darkened substrate, itself varied by a second independent Voronoi call at a different frequency), Normal (a tangent-space perturbation derived by sampling the crack height at three offset points and correctly blended with the base surface's own normal map via BlendAngleCorrectedNormals), Roughness (increased inside the crack to read as a genuine fracture rather than a polished line), and Ambient Occlusion (darkened proportionally with everything else). Crack width itself is further varied along its own length using a third, independent Voronoi call feeding a remap range, producing irregular, organic-width cracking rather than a uniform ribbon.",
+  result:"One master material, three genuinely different surface types (brick, stone, plaster) via Material Instances, each independently tuned; different tiling, width range, and depth per surface, with zero shared crack texture and zero visible tiling seams at any scale, since the pattern is generated mathematically rather than sampled from a fixed-resolution image.",
+  tools:["Unreal Engine 5.7","HLSL","Material Editor","Material Functions"],
+  github:"#",
+  videoId:"qfXJiUXFiQ4",
+  gallery:[
+    {caption:"Brick", image:"assets/procedural-damage_brick.png"},
+    {caption:"Stone", image:"assets/procedural-damage_stone.png"},
+    {caption:"Plaster", image:"assets/procedural-damage_plaster.png"}
+  ]
+},
+  {
     id:"naming-checker",
     title:"Naming Convention Tool",
     shortDesc:"UE5 editor tool with persistent, editable naming conventions and auto-fix",
@@ -947,6 +966,48 @@ function showProject(id){
 // ============ NOTES DATA ============
 const NOTES = [
 {
+
+  id:"procedural-crack-generation-debugging",
+  title:"Building a Procedural Crack System: F1/F2 Voronoi and Three Bugs That Weren't Where I Was Looking",
+  date:"July 2026",
+  category:["Shaders", "Optimization"],
+  summary:"F1/F2 Voronoi generates a crack network from pure math, no texture needed. Getting it to actually look right meant hitting a compiler quirk, a bug that turned out to be in the wrong material channel entirely, and a genuine question about whether any of this was worth building at all.",
+  image:"",
+  body:`
+    <p>Regular Voronoi noise gives you distance to the nearest point in a cell grid. This is useful for organic blotchy patterns, but not cracks. Cracks need something more specific: not just "how close is the nearest point," but "how close were the two nearest points to being tied."</p>
+
+    <h3>F1/F2, briefly</h3>
+    <p>Track the two smallest distances in the same 9-neighbor loop instead of just one; F1 (closest) and F2 (second closest). Their difference, F2-F1, is small wherever two cells are fighting for "closest" almost equally, which only happens right at a cell boundary. Everywhere else, one dot clearly wins and the gap is large. Remapped and inverted, that difference becomes a clean crack mask with zero texture ever sampled. The whole pattern is generated per-pixel, from math, at any scale, with no tiling seams.</p>
+<pre><code>if (dist < F1) { F2 = F1; F1 = dist; }
+else if (dist < F2) { F2 = dist; }
+// ...
+return F2 - F1;</code></pre>
+    <p>That's the mechanism. Here's the result live of  the three surface types sharing one master material, with crack width, tiling, and depth adjusted in real time:</p>
+
+    <div class="video-box" style="margin:1.5rem 0">
+      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/qfXJiUXFiQ4"
+        title="Procedural Damage System demo" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+
+    <p>Getting this into a working material surfaced three problems, none of which were where I expected them.</p>
+    <h3>Bug 1: A Custom node that shouldn't have failed, and didn't say why clearly</h3>
+    <p>UE5's Custom node supports multiple named outputs; declare F1 and F2 as separate Outputs, assign to them instead of using <code>return</code>, and one node hands back two values. In UE5.7, this specific pattern threw a shader compile error on the very first line of the function body, with an error referencing an internal Lumen shader permutation rather than anything obviously related to the actual code.</p>
+    <p>Wrapping the body in explicit braces didn't fix it. The reliable fix was two separate, single-output Custom nodes, each running the identical loop, each ending in a normal <code>return</code>. The real cost: the same 9-iteration loop runs twice instead of once, since the two nodes don't share their computation.</p>
+
+    <h3>Bug 2: A Base Color value that was correct the entire time</h3>
+    <p>After wiring in substrate color variation (a second, independent Voronoi call at a different frequency, driving a Lerp between two dark "exposed material" colors), changing either color produced zero visible difference. The crack lines rendered bright, when both substrate colors were dark, an obvious mismatch, but not an obvious cause.</p>
+    <p>Rather than keep re-reading the node graph, UE5's Buffer Visualization view mode, Base Color specifically, strips out all lighting and shows the raw color output alone. The substrate variation was there, correctly, exactly as intended. The bug wasn't in Base Color at all. Roughness had never been touched, so the crack's perturbed normal was producing a bright specular highlight strong enough to visually erase a subtle dark color difference underneath it. The fix was adding a Roughness increase driven by the same crack mask, which simultaneously fixed the bright-line appearance and made the correct color finally visible.</p>
+    
+
+    <h3>Bug that wasn't a bug: Jagged cracks aren't a parameter</h3>
+    <p>Voronoi cell boundaries are mathematically straight lines between vertices, always. No amount of adjusting tiling, width, or depth changes that. Those parameters control density, thickness, and shading, never the shape of the boundary path itself. Getting an irregular, organic-width crack (used on the stone variant specifically) meant feeding crack width itself from a third, independent Voronoi call rather than a flat parameter. Reused the same function again rather than writing new logic, exactly the value of keeping it as a standalone, parameter-driven Material Function in the first place.</p>
+
+    <h3>Was any of this worth it over just using a texture?</h3>
+    <p>Genuinely depends on the use case, not a universal answer. A single deliberate crack in one specific spot for a specific narrative or gameplay reason, a sourced texture or hand-painted mask is faster and gives an artist direct control a Voronoi field can't offer. This system earns its complexity specifically when many different instances need non-repeating damage without sourcing more textures, or when a material needs to hold up at wildly different scales without visible tiling. Applied here across brick, stone, and plaster from one master material, with independently tuned width, depth, and density per surface. That's the case where it's the right tool, not the only tool.</p>
+  `
+},{
   id:"building-a-stylized-toon-shader",
   title:"Building a Stylized Toon Shader: Quantizing Physically Correct Lighting on Purpose",
   date:"July 2026",
