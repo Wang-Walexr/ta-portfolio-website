@@ -654,7 +654,26 @@ window.addEventListener('hashchange', router);
 
 // ============ PROJECT DATA ============
 const PROJECTS = [
-  {
+{
+  id:"reveal-conceal-system",
+  title:"Reveal & Conceal: A Shared Threshold System for Dissolve and Hidden-Marking Effects",
+  shortDesc:"One reusable masking mechanism driving two gameplay effects; a dissolving wall and a directional hidden marking system, built and tested in a real playable scene",
+  category:["shaders"],
+  tags:["UE5","HLSL","Materials","Blueprint"],
+  thumbnail:"assets/reveal-conceal-thumb.png",
+  problem:"Dissolve effects and hidden-marking reveals are usually built as two unrelated tricks; a time-driven noise threshold for one, a distance-driven mask for the other, even though both are structurally the same comparison",
+  solution:"A single Material Function, compares any input value against any threshold and returns both a hard mask and a soft edge highlight, the one comparison both effects are built from. The dissolve feeds it FBM noise against a time-driven Dissolve Amount, producing large, organic, connected regions that crumble away convincingly, wired to a Blueprint Timeline with correctly ordered collision toggling so the player can walk through once the mesh is gone, and the wall reseals if they leave the area, with collision restored before the mesh is visually solid again. Spatial mode (M_ArrowDecal) feeds it distance from the player's scanner light, gated by a second dot-product check against the scanner's actual facing direction, so a hidden directional arrow marking only reveals when the player is both close enough and genuinely aiming the light at it, not just nearby. The reveal's glow color and intensity are read live from the real light component, rather than hand-matched, so the effect visually behaves as a direct consequence of the actual light rather than a coincidentally similar one.",
+  result:"A fully playable gameplay sequence, a corridor with directional markings that reveal only under direct scanner light, leading to a wall that dissolves on contact and reseals behind the player, built from one shared masking function reused across two functionally different, correctly-tuned modes.",
+  tools:["Unreal Engine 5.7","HLSL","Blueprint","Material Editor","Material Functions"],
+  github:"#",
+  videoId:"r5aeNPGaLmc",
+  gallery:[
+    {caption:"Hidden arrow marking", image:"assets/reveal-conceal-hidden-arrow.png"},
+    {caption:"Wall mid-dissolve", image:"assets/reveal-conceal-wall-dissolve.png"},
+  
+  ]
+},
+{
     id:"optimization-auditor",
     title:"Optimization Auditor",
     shortDesc:"Platform-aware scene and asset performance audit tool with automated fixes",
@@ -965,6 +984,33 @@ function showProject(id){
 
 // ============ NOTES DATA ============
 const NOTES = [
+{
+  id:"reveal-conceal-shared-mechanism",
+  title:"One Comparison, Two Effects: Building a Dissolve and a Hidden-Marking System From the Same Function",
+  date:"July 2026",
+  category:["Shaders", "Blueprint"],
+  summary:"A dissolve effect and a hidden security-marking reveal look like unrelated tricks. They're the same comparison; value against threshold, fed different inputs. Getting there meant ruling out two wrong noise types, catching a sign-inversion bug, and twice deciding a working result still wasn't good enough.",
+  image:"",
+  body:`
+    <p>A dissolve effect and a UV-watermark-style reveal don't look related. One fades a mesh away over time. The other reveals a hidden pattern based on where a light is pointed. Underneath, they're the same operation; take a per-pixel value, compare it against a threshold, and use the result to mask something in or out, with (or without) a glowing edge wherever the two values are close to equal. One shared function, fed different inputs, is the entire foundation both effects are built on.</p>
+
+    <h3>Finding the right noise took three attempts, each wrong for a specific reason</h3>
+    <p>The first attempt used a plain hash function to drive the dissolve. It produced scattered, uncorrelated dots, because that's precisely what a hash is built to do: tiny changes in input produce completely unrelated output. Layering several passes of that same hash on top of itself, hoping for something more organic, didn't help either because stacking uncorrelated noise at different scales just gives you uncorrelated noise with a different contrast profile, not smoothness.</p>
+    <p>The second attempt reused a Voronoi pattern already built for an earlier project. Voronoi produces sharp, geometric cell boundaries, right for cracks, wrong for the soft, organic crumbling a wall dissolving needs.</p>
+    <p>The actual fix needed one ingredient neither previous attempt had; a smooth interpolation between hashed points on a grid, rather than hashing a raw position directly. Instead of one random value per point, four corners of each grid cell get their own fixed value, and every point in between blends smoothly across those four, which is why neighboring pixels can only ever change gradually, never jump at random. Layered at a few different scales, that produces exactly the large, connected, organic-looking regions a convincing dissolve needs.</p>
+
+    <h3>A sign flip that broke one mode and not the other</h3>
+    <p>The shared function's mask means "past the threshold", but which direction that reads as depends entirely on what's actually being compared. For the dissolve, rising noise against a rising dissolve amount happened to line up the right way by coincidence. For the watermark reveal, distance to the scanner against a reveal radius is the opposite relationship. Being close means a small number, and small is below the threshold, not above it. The mask's meaning had quietly flipped between the two modes, without anything in the underlying function actually being wrong. The fix was a single swapped input, the exact same result can be reached from either direction, just by trading which value counts as "on" and which as "off."</p>
+
+    <h3>Two moments where "it works" wasn't the actual finish line</h3>
+    <p>The hidden marking system worked correctly the very first time it compiled, reveal within a radius, correct color, correct glowing edge. It also had an obvious, immediate tell which is turning away from the marking while standing in exactly the same spot did nothing at all, because the whole system only ever checked distance, never direction. A real scanner light reveals whatever it happens to be pointed at, not everything within some fixed radius regardless of where the player is actually looking.</p>
+    <p>The fix was a second comparison layered on top of the first. Checking how closely the scanner's facing direction lines up with the direction toward the surface, the same kind of alignment check behind fresnel, just applied to two arbitrary directions instead of a surface normal and a camera. Multiplied into the existing distance check, both conditions now have to hold at once; close enough, and actually being aimed at.</p>
+    <p>The second moment came right after that fix looked finished. The glow and the real spotlight lighting the same wall still read as two separate things happening to share a location, because the glow's color had been hand-picked to roughly match the light, rather than genuinely coming from it. The fix was reading the scanner's actual color and brightness live, every frame, and reusing the same alignment value already built for the direction check as a brightness multiplier too, so the glow gets brighter exactly where the beam is most directly aimed, for free, from a number that already existed for an entirely different reason.</p>
+
+    <h3>Where it ended up</h3>
+    <p>One shared masking function, two different gameplay effects, tested in a real playable corridor; a directional, light-gated hidden marking system, and a wall that dissolves on contact with collision correctly timed in both directions.</p>
+  `
+},
 {
 
   id:"procedural-crack-generation-debugging",
