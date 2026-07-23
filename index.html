@@ -700,6 +700,26 @@ window.addEventListener('hashchange', router);
 // ============ PROJECT DATA ============
 const PROJECTS = [
 {
+    id:"procedural-building",
+    title:"Procedural Building Generator",
+    shortDesc:"Houdini HDA procedural building generator driven live in UE5 via Houdini Engine, paired with a custom stylized brick shader built from scratch in HLSL.",
+    category:["tools","shaders"],
+    tags:["Houdini","HDA","UE5","HLSL","Material Functions","PDG"],
+    videoId:"7-_coqfwdLw",
+    thumbnail:"assets/proc-building_thumb.png",
+    problem:"Hand-modeling building variations doesn't scale. Every footprint, floor count, or window layout change means re-authoring geometry from scratch.",
+    solution:"A Houdini Digital Asset exposing nine parameters (Width, Depth, Seed, Floor Count, Floor Height, Brick Unit, Window Frequency, Door Width, Door Height), built as a PDG-aware subnet. Footprint dimensions are quantized to bay-unit multiples so window/door spacing stays consistent at any size, with a seeded hash driving per-bay window/wall/door tagging, axis-aware wall IDs, corner reservation, and adaptive door-zone buffering. Wall UVs are locked to a real-world brick unit at the wrangle level, so downstream materials consume raw UV directly with zero rescaling. The companion brick material (M_Brick) is built entirely from custom HLSL Material Functions around a three-zone distance field; flat brick face, sloped 'worn' chamfer edge, and a genuinely recessed mortar gap, driving both Base Color and a real height-derived Normal, with per-brick hash tint and rounded-corner jitter breaking up the repeat.",
+    result:"HDA confirmed working live in UE5.5 via Houdini Engine, with all nine parameters, including Seed reshuffling the entire window/door pattern, functioning correctly in real time. The three-zone brick shader reads mortar as physically recessed under real PBR lighting rather than as a flat color blend. Houdini source available in a <a href=\"https://github.com/Wang-Walexr/proc-building-generator-hda\" target=\"_blank\" rel=\"noopener\">companion repo</a>.",
+    tools:["Houdini","VEX","UE5","HLSL"],
+    github:"https://github.com/Wang-Walexr/proc-building-unreal",
+    gallery:[
+      {caption:"Street-level render showing procedural building variation", image:"assets/proc-building-hero.png"},
+      {caption:"Close-up on the brick material", image:"assets/proc-building-closeup-bricks.png"},
+      {caption:"Building in Houdini", image:"assets/proc-building-houdini.png"},
+      {caption:"Houdini Engine parameter interface", image:"assets/proc-building-parameter-ui.png"}
+    ]
+  },
+  {
   id:"reveal-conceal-system",
   title:"Reveal & Conceal: A Shared Threshold System for Dissolve and Hidden-Marking Effects",
   shortDesc:"One reusable masking mechanism driving two gameplay effects; a dissolving wall and a directional hidden marking system, built and tested in a real playable scene",
@@ -1029,6 +1049,104 @@ function showProject(id){
 
 // ============ NOTES DATA ============
 const NOTES = [
+{
+  id:"brick-shader-three-zone-rebuild",
+  title:"Continuing the Building Generator Pipeline: Building a Stylized Brick Shader from Scratch",
+  date:"July 2026",
+  category:["Shaders","UE5"],
+  summary:"With the Houdini generator producing brick-scale UVs, the next step was a fully custom HLSL brick material with no textures. A technical look at how it was built, from pattern to normal to per-brick variation.",
+  image:"assets/proc-building-bricks.png",
+  body:`
+    <p>Once the Houdini generator (<a href="#/notes/procedural-building-generator-houdini-to-unreal">covered in the previous entry</a>) was locking wall UVs to a real-world brick unit, the next step was a material that could actually use that scale. A fully procedural brick shader, built entirely from custom HLSL Material Functions without textures images, aiming for a stylized-realism look.</p>
+
+    <h3>The first real version blended more than it should have</h3>
+    <p>The first working version drove brick color, mortar color, and the bevel all from a single shared distance value. It looked reasonable at a glance, but mortar visibly bled into the brick color instead of reading as its own separate, recessed material. Closer to a soft gradient than an actual joint between two surfaces. Narrowing the values involved didn't fix it, since the real problem was architectural; one falloff was being asked to do three different jobs at once.</p>
+
+    <img class="note-body-img lightbox-trigger" src="assets/brick-first-version.png" alt="Early version showing mortar color bleeding into the brick face">
+
+    <h3>Rebuilding around genuinely separate zones</h3>
+    <p><strong>MF_BrickPattern</strong> became the single source of truth for shape; an offset running-bond grid, a rounded-box signed distance field per brick (giving organic, slightly-rounded corners instead of sharp 90° joins), and one shared <code>Zone</code> value derived from that distance:</p>
+    <pre><code>// zone: 0 = mortar floor, 1 = brick face, linear ramp through chamfer in between
+float zone = saturate((-ShapeDist - Mortar_Width) / Chamfer_Width);</code></pre>
+    <p>Everything downstream; color, height, occlusion, reads from this one value, so nothing can drift out of sync with anything else.</p>
+
+    <img class="note-body-img lightbox-trigger" src="assets/brick-greyscale-debug-view.png" alt="Zone output in greyscale">
+
+    <p><strong>MF_BrickHeight</strong> takes that same <code>Zone</code> and turns it into an actual height, rather than reusing color math to fake depth:</p>
+    <pre><code>float height = Zone * Recess_Depth;</code></pre>
+    <p>This function is deliberately tiny because all the real pattern work already happened once in MF_BrickPattern, so MF_BrickHeight just converts a zone value into a height sample, called three times at slightly offset UVs (center, and one texel over on each axis).</p>
+
+    <p>Those three height samples feed a standard derivative-to-normal calculation, converting the height differences into a tangent-space bump, then transformed into world space to correctly light against the scene's directional light:</p>
+    <pre><code>float dU = HeightU - HeightCenter;
+float dV = HeightV - HeightCenter;
+float3 BevelNormalTS = normalize(float3(-dU * Strength, -dV * Strength, 1.0));
+// Transform: Tangent Space to World Space, then feed into the material's Normal input</code></pre>
+    <p>With that in place, mortar and the chamfer edge actually catch shadow and highlight as real geometry would.</p>
+
+    <p><strong>Per-brick color</strong> reuses a single hash, seeded from each brick's row and column ID, for three independent things: a slight tint offset so no two bricks match exactly, a small jitter on corner roundness so the silhouette isn't uniformly stamped, and an independent per-brick edge warp so neighboring bricks bend on their own rather than the whole wall moving as one wave:</p>
+    <pre><code>float3 TintedBrickColor = Brick_Color + (BrickRandom - 0.5) * Tint_Strength;</code></pre>
+
+    <p><strong>Ambient occlusion</strong> for the mortar recess ended up needing two layers rather than one: a flat baseline darkening so the gap always reads as recessed, plus noise that varies specifically within the mortar band so it reads as settled grime rather than a uniform color shift:</p>
+    <pre><code>float baseOcclusion = lerp(Mortar_AO_Strength, 1.0, Zone);
+float dustVariation = 1.0 - (dustNoise * mortarMask * Dust_Strength);
+float AO = baseOcclusion * dustVariation;</code></pre>
+    <p>This gets multiplied directly into Base Color rather than fed through the material's dedicated Ambient Occlusion input because the AO input only affects indirect lighting, so it did nothing anywhere the directional light hit the wall directly. Baking it into Base Color instead means the darkening holds up under any lighting condition.</p>
+
+    <img class="note-body-img lightbox-trigger" src="assets/proc-building-closeup-bricks.png" alt="Final brick material under raking light, showing tint variation and recessed mortar">
+
+    <h3>Where it ended up</h3>
+    <p>A brick material where mortar, chamfer, and brick face read as three genuinely distinct surfaces rather than a blend, with per-brick tint, shape variation, a real bevel Normal, and a mortar recess that holds up under both direct and ambient light. A short demo showing the Houdini generator and this material running live together in Unreal is here: <a href="https://youtube.com/watch?v=7-_coqfwdLw" target="_blank">YouTube</a>. Source for the full Unreal project is on <a href="https://github.com/Wang-Walexr/proc-building-unreal" target="_blank">GitHub</a>.</p>
+  `
+},
+{
+  id:"procedural-building-generator-houdini-to-unreal",
+  title:"A Procedural Building Generator: From Houdini Subnet to Live Unreal Parameters",
+  date:"July 2026",
+  category:["Houdini","Tool Design","UE5", "Pipeline"],
+  summary:"Building a parametric building generator in Houdini with bay-unit quantization, seeded bay tagging, a hand-built cubic UV projection, and a subtle float-grouping bug in corner detection, then getting it driving live inside Unreal via Houdini Engine.",
+  image:"assets/proc-building-hero.png",
+  body:`
+    <p>The goal was a single Houdini Digital Asset that could generate a full building, from a handful of parameters, and drive all of it live inside Unreal through Houdini Engine. This is the Houdini half of that pipeline: the generator itself, the decisions that shaped it, and the bug that took longest to track down. <a href="#/notes/brick-shader-three-zone-rebuild">The Unreal-side brick shader gets its own entry here.</a></p>
+
+    <h3>Quantizing to bay units, not raw dimensions</h3>
+    <p>Width and Depth are exposed as simple float or scalar parameters, but neither is used directly. Both get quantized to multiples of a bay unit before anything else happens, so window and door spacing stays visually consistent whether the building is small or large, rather than stretching or compressing to fit an arbitrary footprint:</p>
+    <pre><code>bay_count_x = round(Width / Bay_Unit)
+actual_width = bay_count_x * Bay_Unit
+# same for Depth / bay_count_y</code></pre>
+    <p>This one decision is what makes Seed meaningful later. Every bay is a consistent, real unit of space the hash-tagging step can reason about, instead of an arbitrary fraction of a stretched wall.</p>
+
+    <h3>One hash, three outcomes per bay</h3>
+    <p>Each bay along a wall gets tagged window, wall, or door using a single seeded hash, so the outcome is deterministic per Seed and never double-assigns a bay:</p>
+    <pre><code>bay_hash = hash(bay_index, wallID, Seed)
+if bay_hash < Window_Frequency: tag = "window"
+elif is_door_zone(bay_index, wallID): tag = "door"
+else: tag = "wall"</code></pre>
+    <p>The wall ID needed to be axis-aware for this to work correctly on all four faces. A bay tagging system that only reasoned in local X would read walls running along Y incorrectly. Wall ID is derived per-face, not per-vertex, so the same hash logic produces sensible results regardless of which side of the building it's evaluating.</p>
+
+    <h3>Corners and doors need their own reserved space</h3>
+    <p>Early versions occasionally placed a window directly at a building corner, or a door close enough to a window that the two openings visually collided. Both got fixed with explicit reservation logic: corner bays are excluded from tagging entirely, and door placement carries an adaptive buffer that checks neighboring bay assignments before committing.</p>
+
+    <h3>The float-grouping bug in corner detection</h3>
+    <p>This was the one that took real time to track down. Corner detection relied on Attribute Promote to find the maximum wall ID per group, comparing against a float attribute. It intermittently failed because corners weren't reliably excluded, and the failures weren't consistent between building sizes, which made it look at first like a Seed-dependent issue rather than a type issue.</p>
+    <p>The actual cause: Attribute Promote's grouping behavior doesn't reliably group on floating-point values the way it does on integers. Near-identical floats from upstream math were landing in slightly different buckets instead of being treated as the same wall. The fix was adding an explicit integer attribute, <code>wallID_int</code>, generated once and used specifically for grouping/promotion, while the float version stayed available anywhere floating-point math still needed it. Once grouping had a real integer to key off, corner detection became fully reliable across every footprint size tested.</p>
+
+    <h3>Building UV projection by hand</h3>
+    <p>Windows and doors need UVs projected along whichever axis they're facing, so a cubic-style projection was the obvious tool for the job, except the installed Houdini version didn't have a dedicated node for it (or maybe I didn't see it). That projection got built manually instead by determining the dominant facing axis per primitive from its normal, then projecting UV coordinates using the other two axes accordingly, so a window facing +X and one facing +Y both get sensibly-oriented UVs without any manual per-face correction.</p>
+
+    <h3>Locking wall UVs to a real-world unit</h3>
+    <p>Wall UVs are divided by <code>Brick_Unit</code> directly in the wrangle, before the geometry ever leaves Houdini. Meaning any brick-scale material built downstream can use raw UV directly with zero rescaling. This detail mattered enough later that it needed its own verification pass on the Unreal side, a raw <code>frac(UV.y)</code> test, measured against a real-world cube, to confirm the exported UV actually repeated at exactly <code>Brick_Unit</code> meters rather than needing a second division layer. It did, confirming the wrangle's intent had survived the export correctly.</p>
+
+    <img class="note-body-img lightbox-trigger" src="assets/proc-building-parameter-ui.png" alt="HDA parameter interface with all nine exposed parameters">
+
+    <h3>Getting it live inside Unreal</h3>
+    <p>The HDA is used through Houdini Engine, so every parameter stays live and editable from inside Unreal itself. Testing happened in a UE5.5 project specifically, due to the Houdini version I have access to. All nine parameters (Width, Depth, Seed, Floor Count, Floor Height, Brick Unit, Window Frequency, Door Width, Door Height) were confirmed working through Unreal's live parameter panel, including Seed correctly reshuffling the entire window/door layout in real time without needing to leave the engine.</p>
+
+    <p>A short video showing both sides of this, the parameter interface in Houdini, and the same HDA driving live geometry changes inside Unreal, is here: <a href="https://youtube.com/watch?v=7-_coqfwdLw" target="_blank">YouTube</a>.</p>
+
+    <h3>Where it ended up</h3>
+    <p>A single HDA, nine parameters, bay-unit-quantized geometry, seeded and axis-aware bay tagging, corner and door-zone reservation, a hand-built UV projection, and a real-world-locked UV scale ready for a brick shader to consume directly. Source is available in a companion repo: <a href="https://github.com/Wang-Walexr/proc-building-generator-hda" target="_blank">GitHub</a>. <a href="#/notes/brick-shader-three-zone-rebuild">Continue to the brick shader build.</a></p>
+  `
+},
 {
   id:"reveal-conceal-shared-mechanism",
   title:"One Comparison, Two Effects: Building a Dissolve and a Hidden-Marking System From the Same Function",
